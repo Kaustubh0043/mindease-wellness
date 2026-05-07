@@ -41,7 +41,7 @@ public class AuthService {
     public AuthResponse register(RegisterRequest request) {
         try {
             log.info("NEURAL HANDSHAKE: Initializing identity for {}", request.getEmail());
-            Role userRole = request.getEmail().endsWith("@mindease.com") ? Role.ADMIN : Role.USER;
+            Role userRole = request.getEmail().endsWith("@admin.com") ? Role.ADMIN : Role.USER;
             
             var user = User.builder()
                     .name(request.getName())
