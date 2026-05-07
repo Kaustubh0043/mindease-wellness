@@ -4,6 +4,7 @@ import com.mindease.app.dto.AuthResponse;
 import com.mindease.app.dto.LoginRequest;
 import com.mindease.app.dto.RegisterRequest;
 import com.mindease.app.model.User;
+import com.mindease.app.model.Role;
 import com.mindease.app.repository.UserRepository;
 import com.mindease.app.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -28,18 +29,19 @@ public class AuthService {
     public AuthResponse register(RegisterRequest request) {
         try {
             log.info("NEURAL HANDSHAKE: Initializing identity for {}", request.getEmail());
+            Role userRole = request.getEmail().endsWith("@mindease.com") ? Role.ADMIN : Role.USER;
+            
             var user = User.builder()
                     .name(request.getName())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .role(request.getEmail().endsWith("@mindease.com") ? Role.ADMIN : Role.USER)
+                    .role(userRole)
                     .build();
             repository.save(user);
-            var jwtToken = jwtService.generateToken(new org.springframework.security.core.userdetails.User(
-                    user.getEmail(),
-                    user.getPassword(),
-                    java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority(user.getRole().name()))
-            ));
+            
+            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+            var jwtToken = jwtService.generateToken(userDetails);
+            
             return AuthResponse.builder()
                     .token(jwtToken)
                     .email(user.getEmail())
@@ -53,6 +55,9 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
                         request.getPassword()
                 )
         );
@@ -64,7 +69,7 @@ public class AuthService {
                 .token(jwtToken)
                 .email(user.getEmail())
                 .name(user.getName())
-                .role(user.getRole())
+                .role(user.getRole().name())
                 .build();
     }
 }

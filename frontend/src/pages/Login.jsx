@@ -40,7 +40,7 @@ const Login = () => {
     const [showVerify, setShowVerify] = useState(false);
     const [name, setName] = useState('');
     const [verifyCode, setVerifyCode] = useState('');
-    const { login } = useAuth();
+    const { login, register } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
