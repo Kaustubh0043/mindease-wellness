@@ -37,7 +37,9 @@ export const AuthProvider = ({ children }) => {
     };
 
     const register = async (name, email, password, role) => {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, { name, email, password, role });
+        const url = `${import.meta.env.VITE_API_URL}/auth/register`;
+        console.log("NEURAL HANDSHAKE INITIATED AT:", url);
+        const response = await axios.post(url, { name, email, password, role });
         const userData = response.data;
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
