@@ -3,7 +3,6 @@ package com.mindease.app.service;
 import com.mindease.app.model.MoodType;
 import com.mindease.app.model.Suggestion;
 import com.mindease.app.repository.SuggestionRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

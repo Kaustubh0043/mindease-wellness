@@ -3,7 +3,6 @@ package com.mindease.app.controller;
 import com.mindease.app.model.*;
 import com.mindease.app.repository.UserRepository;
 import com.mindease.app.service.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

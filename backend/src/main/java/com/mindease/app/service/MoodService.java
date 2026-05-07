@@ -4,7 +4,6 @@ import com.mindease.app.model.Mood;
 import com.mindease.app.model.MoodType;
 import com.mindease.app.model.User;
 import com.mindease.app.repository.MoodRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

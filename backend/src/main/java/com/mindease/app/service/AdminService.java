@@ -3,7 +3,6 @@ package com.mindease.app.service;
 import com.mindease.app.model.User;
 import com.mindease.app.repository.MoodRepository;
 import com.mindease.app.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

@@ -3,7 +3,6 @@ package com.mindease.app.service;
 import com.mindease.app.model.ChatLog;
 import com.mindease.app.model.User;
 import com.mindease.app.repository.ChatLogRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

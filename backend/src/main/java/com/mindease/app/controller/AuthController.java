@@ -4,7 +4,6 @@ import com.mindease.app.dto.AuthResponse;
 import com.mindease.app.dto.LoginRequest;
 import com.mindease.app.dto.RegisterRequest;
 import com.mindease.app.service.AuthService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

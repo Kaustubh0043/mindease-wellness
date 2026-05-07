@@ -2,7 +2,6 @@ package com.mindease.app.service;
 
 import com.mindease.app.model.Journal;
 import com.mindease.app.repository.JournalRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -7,7 +7,6 @@ import com.mindease.app.model.User;
 import com.mindease.app.model.Role;
 import com.mindease.app.repository.UserRepository;
 import com.mindease.app.security.JwtService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;

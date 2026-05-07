@@ -2,7 +2,6 @@ package com.mindease.app.controller;
 
 import com.mindease.app.model.SupportTicket;
 import com.mindease.app.repository.SupportTicketRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,11 +9,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/support")
-@RequiredArgsConstructor
 @CrossOrigin("*")
 public class SupportTicketController {
 
     private final SupportTicketRepository repository;
+
+    public SupportTicketController(SupportTicketRepository repository) {
+        this.repository = repository;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<SupportTicket> createTicket(@RequestBody SupportTicket ticket) {
