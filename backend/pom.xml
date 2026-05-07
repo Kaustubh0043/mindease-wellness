@@ -14,7 +14,7 @@
 	<name>MindEase</name>
 	<description>Student Mental Wellness App</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>21</java.version>
 	</properties>
 	<dependencies>
 
