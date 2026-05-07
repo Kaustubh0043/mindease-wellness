@@ -234,20 +234,22 @@ const UserDashboard = () => {
                         <div className="chart-container"><Line options={chartOptions} data={chartData} /></div>
                     </div>
 
-                    <div className="luxury-card span-small">
+                    <div className="luxury-card span-small" style={{ position: 'relative' }}>
                         <Zap className="card-icon" size={32} />
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                            <div>
-                                <div className="card-title">Mental Energy</div>
-                                <div className="card-value">{baselines.energy}%</div>
-                            </div>
-                            <Link to="/calibration" style={{ 
-                                fontSize: '0.6rem', fontWeight: 800, color: '#8b5cf6', 
-                                textDecoration: 'none', letterSpacing: '2px',
-                                border: '1px solid rgba(139, 92, 246, 0.3)',
-                                padding: '0.4rem 0.8rem', borderRadius: '1rem',
-                                marginBottom: '0.5rem'
-                            }}>RE-SYNC</Link>
+                        <Link to="/calibration" style={{ 
+                            position: 'absolute', top: '2.5rem', right: '2.5rem',
+                            fontSize: '0.6rem', fontWeight: 800, color: '#8b5cf6', 
+                            textDecoration: 'none', letterSpacing: '2px',
+                            border: '1px solid rgba(139, 92, 246, 0.3)',
+                            padding: '0.5rem 1rem', borderRadius: '1rem',
+                            background: 'rgba(139, 92, 246, 0.05)',
+                            transition: 'all 0.3s'
+                        }} onMouseOver={e => e.currentTarget.style.background = 'rgba(139, 92, 246, 0.2)'} onMouseOut={e => e.currentTarget.style.background = 'rgba(139, 92, 246, 0.05)'}>
+                            RE-SYNC
+                        </Link>
+                        <div>
+                            <div className="card-title">Mental Energy</div>
+                            <div className="card-value">{baselines.energy}%</div>
                         </div>
                     </div>
 
