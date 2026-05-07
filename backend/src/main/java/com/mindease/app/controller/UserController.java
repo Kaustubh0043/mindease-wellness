@@ -15,6 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class UserController {
 
     private final MoodService moodService;

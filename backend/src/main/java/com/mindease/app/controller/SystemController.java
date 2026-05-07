@@ -12,6 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/public/stats")
 @RequiredArgsConstructor
+@org.springframework.web.bind.annotation.CrossOrigin("*")
 public class SystemController {
 
     private final UserRepository userRepository;
