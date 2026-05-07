@@ -22,7 +22,6 @@ const Navbar = () => {
 
     const navItems = user?.role === 'ADMIN' ? [
         { path: '/admin', icon: <Shield size={18} />, label: 'COMMAND' },
-        { path: '/profile', icon: <User size={18} />, label: 'IDENTITY' },
     ] : user?.role === 'COUNSELOR' ? [
         { path: '/counselor', icon: <Shield size={18} />, label: 'OVERWATCH' },
         { path: '/profile', icon: <User size={18} />, label: 'IDENTITY' },
@@ -110,11 +109,13 @@ const Navbar = () => {
                 ))}
 
 
-                <div className="util-btn" onClick={() => setShowNotifications(!showNotifications)}>
-                    <Bell size={18} />
-                    <span>ALERTS</span>
-                    {hasNotification && <div className="notif-badge" />}
-                </div>
+                {user?.role !== 'ADMIN' && (
+                    <div className="util-btn" onClick={() => setShowNotifications(!showNotifications)}>
+                        <Bell size={18} />
+                        <span>ALERTS</span>
+                        {hasNotification && <div className="notif-badge" />}
+                    </div>
+                )}
 
                 <AnimatePresence>
                     {showNotifications && (

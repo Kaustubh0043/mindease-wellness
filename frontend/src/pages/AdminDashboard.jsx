@@ -151,9 +151,13 @@ const AdminDashboard = () => {
                         </div>
                     </div>
 
-                    {/* Dynamic Tabs Section */}
-                    {activeTab === 'identities' ? (
+                    {/* Dynamic View Section */}
+                    {activeTab === 'identities' && (
                         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="luxury-card" style={{ background: 'rgba(2, 6, 23, 0.4)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '2.5rem', overflow: 'hidden' }}>
+                            <div style={{ padding: '2rem 2.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div style={{ fontSize: '0.7rem', fontWeight: 800, letterSpacing: '2px', color: '#8b5cf6' }}>IDENTITY REGISTRY</div>
+                                <Search size={16} color="#475569" />
+                            </div>
                             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                                 <thead style={{ background: 'rgba(139, 92, 246, 0.05)' }}>
                                     <tr>
@@ -184,19 +188,23 @@ const AdminDashboard = () => {
                                 </tbody>
                             </table>
                         </motion.div>
-                    ) : (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
-                            <div className="luxury-card" style={{ gridColumn: 'span 2', padding: '2.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '2.5rem' }}>
+                    )}
+
+                    {activeTab === 'neural-logs' && (
+                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+                            <div className="luxury-card" style={{ gridColumn: 'span 2', padding: '2.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '2.5rem', border: '1px solid rgba(255,255,255,0.05)' }}>
                                 <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#8b5cf6', marginBottom: '2rem' }}>RECENT NEURAL LOGS</div>
-                                {moods.slice(0, 3).map((m, i) => (
-                                    <div key={i} style={{ padding: '1.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between' }}>
+                                {moods.length > 0 ? moods.slice(0, 5).map((m, i) => (
+                                    <div key={i} style={{ padding: '1.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <div>
-                                            <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{m.user?.name}</div>
+                                            <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{m.user?.name || 'Anonymous'}</div>
                                             <div style={{ color: '#64748b', fontSize: '0.75rem' }}>{m.note}</div>
                                         </div>
-                                        <div style={{ color: '#8b5cf6', fontWeight: 800, fontSize: '0.7rem' }}>{m.mood}</div>
+                                        <div style={{ color: '#8b5cf6', fontWeight: 800, fontSize: '0.7rem', background: 'rgba(139, 92, 246, 0.1)', padding: '0.4rem 0.8rem', borderRadius: '8px' }}>{m.mood}</div>
                                     </div>
-                                ))}
+                                )) : (
+                                    <div style={{ padding: '4rem', textAlign: 'center', color: '#475569' }}>No neural activity detected in the grid.</div>
+                                )}
                             </div>
                             <div className="luxury-card" style={{ padding: '2.5rem', background: 'rgba(139, 92, 246, 0.05)', borderRadius: '2.5rem', border: '1px solid rgba(139, 92, 246, 0.1)' }}>
                                 <Terminal size={24} color="#8b5cf6" style={{ marginBottom: '1.5rem' }} />
@@ -206,9 +214,38 @@ const AdminDashboard = () => {
                                     <div>[OK] AI_SYNTH_ONLINE</div>
                                     <div>[OK] SEC_SHIELD_V2.0</div>
                                     <div>[OK] HANDSHAKE_SUCCESS</div>
+                                    <div style={{ color: '#8b5cf6', marginTop: '1rem' }}>SYSTEM: NOMINAL</div>
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
+                    )}
+
+                    {activeTab === 'tickets' && (
+                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.5rem' }}>
+                            <div className="luxury-card" style={{ padding: '2.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '2.5rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#8b5cf6', marginBottom: '2rem' }}>ACTIVE TICKETS</div>
+                                {tickets.length > 0 ? tickets.map((t, i) => (
+                                    <div key={i} style={{ padding: '1.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                        <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{t.studentName}</div>
+                                        <div style={{ color: '#64748b', fontSize: '0.75rem', marginBottom: '0.5rem' }}>{t.message}</div>
+                                        <span style={{ fontSize: '0.6rem', fontWeight: 900, color: t.status === 'OPEN' ? '#ef4444' : '#10b981' }}>{t.status}</span>
+                                    </div>
+                                )) : (
+                                    <div style={{ padding: '4rem', textAlign: 'center', color: '#475569' }}>No support tickets in queue.</div>
+                                )}
+                            </div>
+                            <div className="luxury-card" style={{ padding: '2.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '2.5rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#8b5cf6', marginBottom: '2rem' }}>CAMPUS SUGGESTIONS</div>
+                                {suggestions.length > 0 ? suggestions.map((s, i) => (
+                                    <div key={i} style={{ padding: '1.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                        <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{s.title}</div>
+                                        <div style={{ color: '#64748b', fontSize: '0.75rem' }}>{s.content}</div>
+                                    </div>
+                                )) : (
+                                    <div style={{ padding: '4rem', textAlign: 'center', color: '#475569' }}>No suggestions submitted yet.</div>
+                                )}
+                            </div>
+                        </motion.div>
                     )}
                 </div>
             </div>
