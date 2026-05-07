@@ -116,14 +116,30 @@ const Calibration = () => {
             const avgEnergy = Math.round(newAnswers.reduce((a, b) => a + b, 0) / newAnswers.length);
             const stabilityLabel = avgEnergy > 80 ? 'Optimal' : avgEnergy > 50 ? 'Stable' : 'Volatile';
             
-            setTimeout(() => {
-                updateBaselines({
-                    energy: avgEnergy,
-                    stability: stabilityLabel,
-                    resonance: Math.round(avgEnergy * 0.8),
-                    calibrationComplete: true
-                });
-                navigate('/dashboard');
+            setTimeout(async () => {
+                try {
+                    const token = JSON.parse(localStorage.getItem('user'))?.token;
+                    const config = { headers: { Authorization: `Bearer ${token}` } };
+                    
+                    // Beam data to the Master Database
+                    await axios.post(`${import.meta.env.VITE_API_URL}/moods`, {
+                        mood: stabilityLabel.toUpperCase() === 'OPTIMAL' ? 'HAPPY' : (stabilityLabel.toUpperCase() === 'STABLE' ? 'NEUTRAL' : 'STRESS'),
+                        note: `Neural Calibration Complete: ${avgEnergy}% Energy detected.`,
+                        intensity: Math.round(avgEnergy / 10)
+                    }, config);
+
+                    updateBaselines({
+                        energy: avgEnergy,
+                        stability: stabilityLabel,
+                        resonance: Math.round(avgEnergy * 0.8),
+                        calibrationComplete: true
+                    });
+                    navigate('/dashboard');
+                } catch (error) {
+                    console.error("Neural Sync Failed:", error);
+                    // Fallback to local only if database is unreachable
+                    navigate('/dashboard');
+                }
             }, 4000);
         }
     };
