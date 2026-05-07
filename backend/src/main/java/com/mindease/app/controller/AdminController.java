@@ -47,6 +47,11 @@ public class AdminController {
         return ResponseEntity.ok(moodService.getAllMoods());
     }
 
+    @GetMapping("/suggestions")
+    public ResponseEntity<List<Suggestion>> getAllSuggestions() {
+        return ResponseEntity.ok(suggestionService.getAllSuggestions());
+    }
+
     @PostMapping("/suggestions")
     public ResponseEntity<Suggestion> addSuggestion(@RequestBody Suggestion suggestion) {
         return ResponseEntity.ok(suggestionService.saveSuggestion(suggestion));

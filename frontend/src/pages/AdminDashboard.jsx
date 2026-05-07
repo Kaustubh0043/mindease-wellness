@@ -27,8 +27,8 @@ const AdminDashboard = () => {
                 axios.get(`${import.meta.env.VITE_API_URL}/admin/users`, config),
                 axios.get(`${import.meta.env.VITE_API_URL}/admin/stats`, config),
                 axios.get(`${import.meta.env.VITE_API_URL}/admin/moods`, config),
-                axios.get(`${import.meta.env.VITE_API_URL}/public/suggestions`),
-                axios.get(`${import.meta.env.VITE_API_URL}/support/all`)
+                axios.get(`${import.meta.env.VITE_API_URL}/admin/suggestions`, config),
+                axios.get(`${import.meta.env.VITE_API_URL}/support/all`, config)
             ]);
             
             setUsers(usersRes.data);
