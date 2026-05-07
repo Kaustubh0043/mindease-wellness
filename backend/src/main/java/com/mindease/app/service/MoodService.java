@@ -12,10 +12,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class MoodService {
 
     private final MoodRepository moodRepository;
+
+    public MoodService(MoodRepository moodRepository) {
+        this.moodRepository = moodRepository;
+    }
 
     public Mood saveMood(Mood mood) {
         return moodRepository.save(mood);

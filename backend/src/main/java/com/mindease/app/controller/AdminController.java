@@ -15,13 +15,22 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
-@RequiredArgsConstructor
 @CrossOrigin("*")
 public class AdminController {
 
     private final AdminService adminService;
     private final MoodService moodService;
     private final SuggestionService suggestionService;
+
+    public AdminController(
+            AdminService adminService,
+            MoodService moodService,
+            SuggestionService suggestionService
+    ) {
+        this.adminService = adminService;
+        this.moodService = moodService;
+        this.suggestionService = suggestionService;
+    }
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {

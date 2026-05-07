@@ -14,7 +14,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@RequiredArgsConstructor
 @CrossOrigin("*")
 public class UserController {
 
@@ -24,6 +23,20 @@ public class UserController {
     private final SuggestionService suggestionService;
     private final UserRepository userRepository;
 
+    public UserController(
+            MoodService moodService,
+            JournalService journalService,
+            ChatService chatService,
+            SuggestionService suggestionService,
+            UserRepository userRepository
+    ) {
+        this.moodService = moodService;
+        this.journalService = journalService;
+        this.chatService = chatService;
+        this.suggestionService = suggestionService;
+        this.userRepository = userRepository;
+    }
+
     private User getCurrentUser(Authentication authentication) {
         return userRepository.findByEmail(authentication.getName()).orElseThrow();
     }
@@ -31,12 +44,12 @@ public class UserController {
     @PostMapping("/moods")
     public ResponseEntity<Mood> addMood(@RequestBody Map<String, String> payload, Authentication authentication) {
         User user = getCurrentUser(authentication);
-        Mood mood = Mood.builder()
-                .user(user)
-                .mood(MoodType.valueOf(payload.get("mood")))
-                .note(payload.get("note"))
-                .date(LocalDate.parse(payload.get("date")))
-                .build();
+        Mood mood = new Mood(
+                user,
+                MoodType.valueOf(payload.get("mood")),
+                payload.get("note"),
+                LocalDate.parse(payload.get("date"))
+        );
         return ResponseEntity.ok(moodService.saveMood(mood));
     }
 
@@ -54,10 +67,7 @@ public class UserController {
     @PostMapping("/journal")
     public ResponseEntity<Journal> addJournal(@RequestBody Map<String, String> payload, Authentication authentication) {
         User user = getCurrentUser(authentication);
-        Journal journal = Journal.builder()
-                .user(user)
-                .content(payload.get("content"))
-                .build();
+        Journal journal = new Journal(user, payload.get("content"));
         return ResponseEntity.ok(journalService.saveJournal(journal));
     }
 

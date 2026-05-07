@@ -5,10 +5,6 @@ import lombok.*;
 
 @Entity
 @Table(name = "suggestions")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Suggestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +16,19 @@ public class Suggestion {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String suggestion;
+
+    public Suggestion() {}
+
+    public Suggestion(MoodType mood, String suggestion) {
+        this.mood = mood;
+        this.suggestion = suggestion;
+    }
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public MoodType getMood() { return mood; }
+    public void setMood(MoodType mood) { this.mood = mood; }
+    public String getSuggestion() { return suggestion; }
+    public void setSuggestion(String suggestion) { this.suggestion = suggestion; }
 }

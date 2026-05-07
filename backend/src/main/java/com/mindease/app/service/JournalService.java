@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class JournalService {
     private final JournalRepository journalRepository;
+
+    public JournalService(JournalRepository journalRepository) {
+        this.journalRepository = journalRepository;
+    }
 
     public Journal saveJournal(Journal journal) {
         return journalRepository.save(journal);

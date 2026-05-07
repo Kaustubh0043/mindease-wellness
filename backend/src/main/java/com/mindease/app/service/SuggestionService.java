@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class SuggestionService {
     private final SuggestionRepository suggestionRepository;
+
+    public SuggestionService(SuggestionRepository suggestionRepository) {
+        this.suggestionRepository = suggestionRepository;
+    }
 
     public List<Suggestion> getSuggestionsByMood(MoodType mood) {
         return suggestionRepository.findByMood(mood);

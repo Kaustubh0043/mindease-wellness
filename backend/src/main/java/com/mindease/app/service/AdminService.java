@@ -11,10 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class AdminService {
     private final UserRepository userRepository;
     private final MoodRepository moodRepository;
+
+    public AdminService(UserRepository userRepository, MoodRepository moodRepository) {
+        this.userRepository = userRepository;
+        this.moodRepository = moodRepository;
+    }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();

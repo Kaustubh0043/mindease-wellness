@@ -9,17 +9,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ChatService {
     private final ChatLogRepository chatLogRepository;
 
+    public ChatService(ChatLogRepository chatLogRepository) {
+        this.chatLogRepository = chatLogRepository;
+    }
+
     public ChatLog processMessage(User user, String message) {
         String response = generateResponse(message);
-        ChatLog log = ChatLog.builder()
-                .user(user)
-                .message(message)
-                .response(response)
-                .build();
+        ChatLog log = new ChatLog(user, message, response);
         return chatLogRepository.save(log);
     }
 
