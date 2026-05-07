@@ -15,7 +15,7 @@ const Documentation = () => {
 
     const handleCreateTicket = async () => {
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/support/create`, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/support/create`, {
                 studentName: user?.name || 'Anonymous Student',
                 studentEmail: user?.email || 'unlinked@mindease.com',
                 message: 'NEURAL DESYNC: User requested institutional support from the Knowledge Base.',

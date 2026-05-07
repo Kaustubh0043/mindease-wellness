@@ -200,8 +200,8 @@ const Login = () => {
             </section>
 
             <footer style={{ padding: '15vh 6vw', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
-                <div className="massive-title" style={{ fontSize: 'clamp(3rem, 10vw, 8rem)', opacity: 0.1, color: 'white', marginBottom: '4rem' }}>MINDEASE</div>
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '4rem', marginBottom: '6rem', fontWeight: 800, fontSize: '0.75rem', letterSpacing: '4px' }}>
+                <div className="massive-title" style={{ fontSize: 'clamp(3rem, 10vw, 8rem)', opacity: 0.1, color: 'white', marginBottom: '4rem', position: 'relative', zIndex: 0 }}>MINDEASE</div>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '3rem', marginBottom: '6rem', fontWeight: 800, fontSize: '0.75rem', letterSpacing: '4px', position: 'relative', zIndex: 100 }}>
                     <a href="/docs" style={{ display: 'inline-block', color: 'white', textDecoration: 'none', border: '2px solid #8b5cf6', padding: '0.8rem 2rem', borderRadius: '2rem', background: 'rgba(139, 92, 246, 0.2)' }}>GET SUPPORT</a>
                     <a href="https://www.instagram.com/kaustubhh.jadhav/" target="_blank" rel="noreferrer" style={{ color: 'white', textDecoration: 'none', opacity: 0.5 }}>INSTAGRAM</a>
                     <a href="https://x.com/Kaustubh__xd" target="_blank" rel="noreferrer" style={{ color: 'white', textDecoration: 'none', opacity: 0.5 }}>TWITTER</a>
