@@ -236,7 +236,19 @@ const UserDashboard = () => {
 
                     <div className="luxury-card span-small">
                         <Zap className="card-icon" size={32} />
-                        <div><div className="card-title">Mental Energy</div><div className="card-value">{baselines.energy}%</div></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                            <div>
+                                <div className="card-title">Mental Energy</div>
+                                <div className="card-value">{baselines.energy}%</div>
+                            </div>
+                            <Link to="/calibration" style={{ 
+                                fontSize: '0.6rem', fontWeight: 800, color: '#8b5cf6', 
+                                textDecoration: 'none', letterSpacing: '2px',
+                                border: '1px solid rgba(139, 92, 246, 0.3)',
+                                padding: '0.4rem 0.8rem', borderRadius: '1rem',
+                                marginBottom: '0.5rem'
+                            }}>RE-SYNC</Link>
+                        </div>
                     </div>
 
                     <div className="luxury-card span-small">
