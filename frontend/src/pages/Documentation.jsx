@@ -16,7 +16,7 @@ const Documentation = () => {
     const handleCreateTicket = async () => {
         setLoading(true);
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/support/create`, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/support/create`, {
                 studentName: user?.name || 'Anonymous Student',
                 studentEmail: user?.email || 'unlinked@mindease.com',
                 message: 'STUDENT REQUEST: User requested institutional support from the Wellness Hub.',

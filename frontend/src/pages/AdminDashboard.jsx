@@ -28,7 +28,7 @@ const AdminDashboard = () => {
                 axios.get(`${import.meta.env.VITE_API_URL}/admin/stats`, config),
                 axios.get(`${import.meta.env.VITE_API_URL}/admin/moods`, config),
                 axios.get(`${import.meta.env.VITE_API_URL}/public/suggestions`),
-                axios.get(`${import.meta.env.VITE_API_URL}/api/support/all`)
+                axios.get(`${import.meta.env.VITE_API_URL}/support/all`)
             ]);
             
             setUsers(usersRes.data);
@@ -58,7 +58,7 @@ const AdminDashboard = () => {
 
     const updateTicketStatus = async (id, status) => {
         try {
-            await axios.patch(`${import.meta.env.VITE_API_URL}/api/support/${id}/status?status=${status}`);
+            await axios.patch(`${import.meta.env.VITE_API_URL}/support/${id}/status?status=${status}`);
             fetchData();
         } catch (error) {
             console.error('Status update failed:', error);
