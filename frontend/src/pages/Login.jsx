@@ -38,6 +38,7 @@ const Login = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isRegistering, setIsRegistering] = useState(false);
     const [showVerify, setShowVerify] = useState(false);
+    const [name, setName] = useState('');
     const [verifyCode, setVerifyCode] = useState('');
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -72,12 +73,17 @@ const Login = () => {
         }
     };
 
-    const handleVerify = (e) => {
+    const handleVerify = async (e) => {
         e.preventDefault();
         if (verifyCode === '123456') {
-            alert('IDENTITY VERIFIED: Neural Handshake Complete.');
-            setShowVerify(false);
-            setIsRegistering(false);
+            try {
+                await register(name || 'Overwatch Alpha', email, password);
+                alert('IDENTITY VERIFIED: Neural Handshake Complete. You may now log in.');
+                setShowVerify(false);
+                setIsRegistering(false);
+            } catch (error) {
+                alert('HANDSHAKE FAILED: Institutional database unreachable.');
+            }
         } else {
             alert('SECURITY BREACH: Invalid Neural Key.');
         }
@@ -149,6 +155,12 @@ const Login = () => {
                 <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="form-panel-invisible">
                     <h2 style={{ fontFamily: 'Playfair Display', fontSize: '3rem', marginBottom: '3rem' }}>{isRegistering ? 'Initialize' : 'Login'}</h2>
                     <form onSubmit={handleSubmit}>
+                        {isRegistering && (
+                            <div className="luxury-input-invisible">
+                                <label>FULL IDENTITY</label>
+                                <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Your Name" />
+                            </div>
+                        )}
                         <div className="luxury-input-invisible">
                             <label>INSTITUTIONAL ID</label>
                             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="user@institute.edu" />

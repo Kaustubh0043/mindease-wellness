@@ -25,11 +25,13 @@ public class AuthService {
     private final UserDetailsService userDetailsService;
 
     public AuthResponse register(RegisterRequest request) {
+        String role = request.getEmail().endsWith("@mindease.com") ? "ADMIN" : "USER";
+        
         var user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .role(role)
                 .build();
         repository.save(user);
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
