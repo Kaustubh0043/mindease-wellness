@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@lombok.extern.slf4j.Slf4j
 public class AuthService {
 
     private final UserRepository repository;
@@ -25,29 +26,33 @@ public class AuthService {
     private final UserDetailsService userDetailsService;
 
     public AuthResponse register(RegisterRequest request) {
-        String role = request.getEmail().endsWith("@mindease.com") ? "ADMIN" : "USER";
-        
-        var user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(role)
-                .build();
-        repository.save(user);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-        var jwtToken = jwtService.generateToken(userDetails);
-        return AuthResponse.builder()
-                .token(jwtToken)
-                .email(user.getEmail())
-                .name(user.getName())
-                .role(user.getRole())
-                .build();
+        try {
+            log.info("NEURAL HANDSHAKE: Initializing identity for {}", request.getEmail());
+            var user = User.builder()
+                    .name(request.getName())
+                    .email(request.getEmail())
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .role(request.getEmail().endsWith("@mindease.com") ? Role.ADMIN : Role.USER)
+                    .build();
+            repository.save(user);
+            var jwtToken = jwtService.generateToken(new org.springframework.security.core.userdetails.User(
+                    user.getEmail(),
+                    user.getPassword(),
+                    java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority(user.getRole().name()))
+            ));
+            return AuthResponse.builder()
+                    .token(jwtToken)
+                    .email(user.getEmail())
+                    .name(user.getName())
+                    .role(user.getRole().name())
+                    .build();
+        } catch (Exception e) {
+            log.error("HANDSHAKE FAILED: Database rejection for {}. Reason: {}", request.getEmail(), e.getMessage());
+            throw e;
+        }
     }
 
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
                         request.getPassword()
                 )
         );
