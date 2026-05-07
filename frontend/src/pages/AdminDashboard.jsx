@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { Users, Shield, Trash2, Activity, Globe, Search, MessageSquare, Heart, Clock, Sparkles, Zap, BarChart3, Terminal } from 'lucide-react';
+import { Users, Shield, Trash2, Activity, Globe, Search, MessageSquare, Heart, Clock, Sparkles, Zap, BarChart3, Terminal, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Line } from 'react-chartjs-2';
 import {
@@ -101,26 +101,60 @@ const AdminDashboard = () => {
     };
 
     return (
-        <div className="dashboard-space" style={{ minHeight: '100vh', background: '#020617', color: 'white', display: 'flex' }}>
-            {/* Elite Sidebar */}
-            <div style={{ width: '280px', borderRight: '1px solid rgba(255,255,255,0.05)', padding: '4rem 2rem', display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+        <div className="dashboard-space" style={{ minHeight: '100vh', background: '#020617', color: 'white', display: 'flex', position: 'relative' }}>
+            {/* Elite Sidebar - Forced to Top Layer */}
+            <div style={{ 
+                width: '280px', borderRight: '1px solid rgba(255,255,255,0.05)', 
+                padding: '4rem 2rem', display: 'flex', flexDirection: 'column', 
+                gap: '3rem', position: 'relative', zIndex: 200, background: '#020617' 
+            }}>
                 <div style={{ fontFamily: 'Playfair Display', fontSize: '1.5rem', fontWeight: 900, letterSpacing: '-1px' }}>MINDEASE</div>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <button onClick={() => setActiveTab('identities')} style={{ background: activeTab === 'identities' ? 'rgba(139, 92, 246, 0.1)' : 'transparent', border: 'none', color: activeTab === 'identities' ? '#8b5cf6' : '#64748b', padding: '1rem', borderRadius: '1rem', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', transition: '0.3s' }}>
+                    <button 
+                        onClick={() => { console.log("Switching to Identities"); setActiveTab('identities'); }} 
+                        style={{ 
+                            background: activeTab === 'identities' ? 'rgba(139, 92, 246, 0.1)' : 'transparent', 
+                            border: activeTab === 'identities' ? '1px solid rgba(139, 92, 246, 0.2)' : 'none', 
+                            color: activeTab === 'identities' ? '#8b5cf6' : '#64748b', 
+                            padding: '1.25rem', borderRadius: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', transition: '0.3s', width: '100%', textAlign: 'left' 
+                        }}
+                    >
                         <Shield size={20} /> <span style={{ fontSize: '0.7rem', fontWeight: 800, letterSpacing: '2px' }}>COMMAND</span>
                     </button>
-                    <button onClick={() => setActiveTab('neural-logs')} style={{ background: activeTab === 'neural-logs' ? 'rgba(139, 92, 246, 0.1)' : 'transparent', border: 'none', color: activeTab === 'neural-logs' ? '#8b5cf6' : '#64748b', padding: '1rem', borderRadius: '1rem', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer' }}>
+                    <button 
+                        onClick={() => { console.log("Switching to Logs"); setActiveTab('neural-logs'); }} 
+                        style={{ 
+                            background: activeTab === 'neural-logs' ? 'rgba(139, 92, 246, 0.1)' : 'transparent', 
+                            border: activeTab === 'neural-logs' ? '1px solid rgba(139, 92, 246, 0.2)' : 'none', 
+                            color: activeTab === 'neural-logs' ? '#8b5cf6' : '#64748b', 
+                            padding: '1.25rem', borderRadius: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', transition: '0.3s', width: '100%', textAlign: 'left' 
+                        }}
+                    >
                         <Activity size={20} /> <span style={{ fontSize: '0.7rem', fontWeight: 800, letterSpacing: '2px' }}>RESONANCE</span>
                     </button>
-                    <button onClick={() => setActiveTab('tickets')} style={{ background: activeTab === 'tickets' ? 'rgba(139, 92, 246, 0.1)' : 'transparent', border: 'none', color: activeTab === 'tickets' ? '#8b5cf6' : '#64748b', padding: '1rem', borderRadius: '1rem', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer' }}>
+                    <button 
+                        onClick={() => { console.log("Switching to Tickets"); setActiveTab('tickets'); }} 
+                        style={{ 
+                            background: activeTab === 'tickets' ? 'rgba(139, 92, 246, 0.1)' : 'transparent', 
+                            border: activeTab === 'tickets' ? '1px solid rgba(139, 92, 246, 0.2)' : 'none', 
+                            color: activeTab === 'tickets' ? '#8b5cf6' : '#64748b', 
+                            padding: '1.25rem', borderRadius: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', transition: '0.3s', width: '100%', textAlign: 'left' 
+                        }}
+                    >
                         <MessageSquare size={20} /> <span style={{ fontSize: '0.7rem', fontWeight: 800, letterSpacing: '2px' }}>PROTOCOLS</span>
                     </button>
                 </div>
 
-                <div style={{ marginTop: 'auto', padding: '2rem', background: 'rgba(139, 92, 246, 0.05)', borderRadius: '1.5rem', border: '1px solid rgba(139, 92, 246, 0.1)' }}>
-                    <div style={{ fontSize: '0.6rem', fontWeight: 800, color: '#8b5cf6', marginBottom: '0.5rem' }}>SYSTEM UPTIME</div>
-                    <div style={{ fontSize: '1.25rem', fontFamily: 'Playfair Display' }}>99.99%</div>
+                <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{ padding: '2rem', background: 'rgba(139, 92, 246, 0.05)', borderRadius: '1.5rem', border: '1px solid rgba(139, 92, 246, 0.1)' }}>
+                        <div style={{ fontSize: '0.6rem', fontWeight: 800, color: '#8b5cf6', marginBottom: '0.5rem' }}>SYSTEM UPTIME</div>
+                        <div style={{ fontSize: '1.25rem', fontFamily: 'Playfair Display' }}>99.99%</div>
+                    </div>
+                    
+                    <button onClick={() => { localStorage.clear(); window.location.href = '/login'; }} style={{ background: 'transparent', border: 'none', color: '#ef4444', padding: '1rem', borderRadius: '1rem', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', transition: '0.3s', opacity: 0.6 }} onMouseOver={e => e.currentTarget.style.opacity = 1} onMouseOut={e => e.currentTarget.style.opacity = 0.6}>
+                        <LogOut size={20} /> <span style={{ fontSize: '0.7rem', fontWeight: 800, letterSpacing: '2px' }}>TERMINATE</span>
+                    </button>
                 </div>
             </div>
 

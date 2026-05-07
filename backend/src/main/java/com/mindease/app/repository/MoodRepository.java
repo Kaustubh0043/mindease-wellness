@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface MoodRepository extends JpaRepository<Mood, Long> {
     List<Mood> findByUserIdOrderByDateDesc(Long userId);
+    void deleteByUserId(Long userId);
     long count();
 }

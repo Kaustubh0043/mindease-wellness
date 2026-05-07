@@ -20,11 +20,16 @@ import './index.css';
 
 const LayoutWrapper = ({ children }) => {
   const { user } = useAuth();
-  const location = useLocation();
   const isPublicPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/about' || location.pathname === '/docs';
-
+  const isAdminPage = location.pathname === '/admin';
+  
   if (!user || isPublicPage) {
     return <div className="auth-wrapper">{children}</div>;
+  }
+
+  // Admin Dashboard handles its own layout/sidebar
+  if (isAdminPage) {
+    return <div className="admin-wrapper" style={{ background: '#020617', minHeight: '100vh', width: '100%' }}>{children}</div>;
   }
 
   return (
