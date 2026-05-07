@@ -9,6 +9,7 @@ const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
     const [moods, setMoods] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
+    const [tickets, setTickets] = useState([]);
     const [stats, setStats] = useState({ totalUsers: 0, totalMoods: 0 });
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('identities');
@@ -22,17 +23,19 @@ const AdminDashboard = () => {
             const token = JSON.parse(localStorage.getItem('user'))?.token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
             
-            const [usersRes, statsRes, moodsRes, suggRes] = await Promise.all([
+            const [usersRes, statsRes, moodsRes, suggRes, ticketsRes] = await Promise.all([
                 axios.get(`${import.meta.env.VITE_API_URL}/admin/users`, config),
                 axios.get(`${import.meta.env.VITE_API_URL}/admin/stats`, config),
                 axios.get(`${import.meta.env.VITE_API_URL}/admin/moods`, config),
-                axios.get(`${import.meta.env.VITE_API_URL}/public/suggestions`)
+                axios.get(`${import.meta.env.VITE_API_URL}/public/suggestions`),
+                axios.get(`${import.meta.env.VITE_API_URL}/api/support/all`)
             ]);
             
             setUsers(usersRes.data);
             setStats(statsRes.data);
             setMoods(moodsRes.data);
             setSuggestions(suggRes.data);
+            setTickets(ticketsRes.data);
         } catch (error) {
             console.error('Failed to fetch admin data:', error);
         } finally {
@@ -50,6 +53,15 @@ const AdminDashboard = () => {
             fetchData();
         } catch (error) {
             console.error('Termination failed:', error);
+        }
+    };
+
+    const updateTicketStatus = async (id, status) => {
+        try {
+            await axios.patch(`${import.meta.env.VITE_API_URL}/api/support/${id}/status?status=${status}`);
+            fetchData();
+        } catch (error) {
+            console.error('Status update failed:', error);
         }
     };
 
@@ -81,7 +93,7 @@ const AdminDashboard = () => {
 
                 {/* Tabs */}
                 <div style={{ display: 'flex', gap: '2rem', marginBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '1rem' }}>
-                    {['identities', 'neural-logs', 'suggestions'].map(tab => (
+                    {['identities', 'neural-logs', 'tickets', 'suggestions'].map(tab => (
                         <button 
                             key={tab}
                             onClick={() => setActiveTab(tab)}
@@ -134,6 +146,51 @@ const AdminDashboard = () => {
                                         </td>
                                     </tr>
                                 ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : activeTab === 'tickets' ? (
+                    <div className="luxury-card" style={{ padding: '0', overflow: 'hidden', background: 'rgba(2, 6, 23, 0.4)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '2.5rem' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                            <thead style={{ background: 'rgba(139, 92, 246, 0.05)' }}>
+                                <tr>
+                                    <th style={{ padding: '1.5rem 2rem', fontSize: '0.65rem', letterSpacing: '2px', color: '#8b5cf6' }}>STUDENT</th>
+                                    <th style={{ padding: '1.5rem 2rem', fontSize: '0.65rem', letterSpacing: '2px', color: '#8b5cf6' }}>ISSUE REPORTED</th>
+                                    <th style={{ padding: '1.5rem 2rem', fontSize: '0.65rem', letterSpacing: '2px', color: '#8b5cf6' }}>STATUS</th>
+                                    <th style={{ padding: '1.5rem 2rem', fontSize: '0.65rem', letterSpacing: '2px', color: '#8b5cf6' }}>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {tickets.map((t) => (
+                                    <tr key={t.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
+                                        <td style={{ padding: '1.5rem 2rem' }}>
+                                            <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{t.studentName}</div>
+                                            <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{t.studentEmail}</div>
+                                        </td>
+                                        <td style={{ padding: '1.5rem 2rem', color: '#94a3b8', fontSize: '0.85rem', maxWidth: '400px' }}>{t.message}</td>
+                                        <td style={{ padding: '1.5rem 2rem' }}>
+                                            <span style={{ 
+                                                padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.6rem', fontWeight: 800,
+                                                background: t.status === 'OPEN' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)',
+                                                color: t.status === 'OPEN' ? '#ef4444' : '#10b981',
+                                                border: '1px solid rgba(255,255,255,0.05)'
+                                            }}>{t.status}</span>
+                                        </td>
+                                        <td style={{ padding: '1.5rem 2rem' }}>
+                                            {t.status === 'OPEN' && (
+                                                <button 
+                                                    onClick={() => updateTicketStatus(t.id, 'RESOLVED')}
+                                                    style={{ background: 'rgba(139, 92, 246, 0.2)', border: '1px solid #8b5cf6', color: 'white', padding: '0.5rem 1rem', borderRadius: '1rem', fontSize: '0.65rem', fontWeight: 800, cursor: 'pointer' }}
+                                                >
+                                                    RESOLVE
+                                                </button>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                                {tickets.length === 0 && (
+                                    <tr><td colSpan="4" style={{ padding: '4rem', textAlign: 'center', color: '#475569' }}>No support tickets currently logged in the grid.</td></tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
