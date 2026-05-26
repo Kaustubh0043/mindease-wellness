@@ -153,7 +153,7 @@ const AdminDashboard = () => {
                     </div>
                     
                     <button onClick={() => { localStorage.clear(); window.location.href = '/login'; }} style={{ background: 'transparent', border: 'none', color: '#ef4444', padding: '1rem', borderRadius: '1rem', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', transition: '0.3s', opacity: 0.6 }} onMouseOver={e => e.currentTarget.style.opacity = 1} onMouseOut={e => e.currentTarget.style.opacity = 0.6}>
-                        <LogOut size={20} /> <span style={{ fontSize: '0.7rem', fontWeight: 800, letterSpacing: '2px' }}>TERMINATE</span>
+                        <LogOut size={20} /> <span style={{ fontSize: '0.7rem', fontWeight: 800, letterSpacing: '2px' }}>LOG OUT</span>
                     </button>
                 </div>
             </div>

@@ -150,7 +150,7 @@ const Navbar = () => {
 
             <button onClick={handleLogout} className="logout-btn">
                 <LogOut size={18} />
-                <span>TERMINATE</span>
+                <span>LOG OUT</span>
             </button>
         </nav>
     );
