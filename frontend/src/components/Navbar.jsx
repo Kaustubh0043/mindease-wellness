@@ -43,16 +43,6 @@ const Navbar = () => {
                     padding: 2rem 1.5rem; display: flex; flex-direction: column;
                     z-index: 100; border-right: 1px solid rgba(255,255,255,0.03);
                     background: rgba(2, 6, 23, 0.4); backdrop-filter: blur(40px);
-                    overflow-y: auto;
-                }
-                /* Hide scrollbar for Chrome, Safari and Opera */
-                .ghost-sidebar::-webkit-scrollbar {
-                    display: none;
-                }
-                /* Hide scrollbar for IE, Edge and Firefox */
-                .ghost-sidebar {
-                    -ms-overflow-style: none;  /* IE and Edge */
-                    scrollbar-width: none;  /* Firefox */
                 }
                 .sidebar-logo {
                     font-family: 'Outfit'; font-weight: 800; font-size: 1.25rem;
