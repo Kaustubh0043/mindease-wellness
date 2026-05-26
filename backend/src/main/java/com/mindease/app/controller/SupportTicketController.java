@@ -5,6 +5,7 @@ import com.mindease.app.repository.SupportTicketRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.core.Authentication;
 import java.util.List;
 
 @RestController
@@ -22,6 +23,11 @@ public class SupportTicketController {
     public ResponseEntity<SupportTicket> createTicket(@RequestBody SupportTicket ticket) {
         ticket.setStatus("OPEN");
         return ResponseEntity.ok(repository.save(ticket));
+    }
+
+    @GetMapping("/my-tickets")
+    public ResponseEntity<List<SupportTicket>> getMyTickets(Authentication authentication) {
+        return ResponseEntity.ok(repository.findByStudentEmailOrderByCreatedAtDesc(authentication.getName()));
     }
 
     @GetMapping("/all")

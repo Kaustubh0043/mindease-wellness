@@ -1,11 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { MessageSquare, Save, History, BookOpen, ArrowRight } from 'lucide-react';
+import { MessageSquare, Save, History, BookOpen, ArrowRight, Loader2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 
 const Journal = () => {
+    const { user } = useAuth();
     const [entry, setEntry] = useState('');
     const [title, setTitle] = useState('');
+    const [pastEntries, setPastEntries] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
+
+    const fetchEntries = async () => {
+        if (!user) return;
+        try {
+            const config = { headers: { Authorization: `Bearer ${user.token}` } };
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/journal`, config);
+            setPastEntries(response.data);
+        } catch (error) {
+            console.error("Failed to fetch journals", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchEntries();
+    }, [user]);
+
+    const handleSave = async (e) => {
+        e.preventDefault();
+        if (!entry.trim()) {
+            alert("REFLECTION ERROR: Cannot archive an empty thought stream.");
+            return;
+        }
+        setIsSaving(true);
+        try {
+            const config = { headers: { Authorization: `Bearer ${user.token}` } };
+            const combinedContent = title.trim() 
+                ? `${title.trim()}\n\n${entry.trim()}` 
+                : `Untitled Reflection\n\n${entry.trim()}`;
+                
+            await axios.post(`${import.meta.env.VITE_API_URL}/journal`, { content: combinedContent }, config);
+            setTitle('');
+            setEntry('');
+            alert("REFLECTION ARCHIVED: Thoughts safely encrypted and synchronized.");
+            fetchEntries();
+        } catch (error) {
+            console.error("Failed to save journal", error);
+            alert("HANDSHAKE FAILED: Unable to commit reflection to database.");
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
     return (
         <div className="dashboard-space">
@@ -86,21 +135,53 @@ const Journal = () => {
                                 value={entry}
                                 onChange={(e) => setEntry(e.target.value)}
                             />
-                            <button className="ghost-btn">SAVE ARCHIVE <Save size={16} /></button>
+                            <button 
+                                className="ghost-btn" 
+                                onClick={handleSave}
+                                disabled={isSaving || !entry.trim()}
+                            >
+                                {isSaving ? "SYNCHRONIZING..." : "SAVE ARCHIVE"} 
+                                {isSaving ? <Loader2 className="spin" size={16} /> : <Save size={16} />}
+                            </button>
                         </div>
 
                         <div className="archive-section">
                             <div className="status-tag" style={{ marginBottom: '1rem' }}>PAST ENTRIES</div>
-                            {[
-                                { date: '22 APR 2026', title: 'The Silence of Academic Pressure' },
-                                { date: '20 APR 2026', title: 'Calibrating Focus Waves' },
-                                { date: '18 APR 2026', title: 'Initialization of Growth' }
-                            ].map((item, index) => (
-                                <div key={index} className="archive-card">
-                                    <span className="archive-date">{item.date}</span>
-                                    <div className="archive-title">{item.title}</div>
+                            {isLoading ? (
+                                <div style={{ color: '#475569', fontSize: '0.9rem', padding: '1rem 0' }}>
+                                    Scanning neural logs...
                                 </div>
-                            ))}
+                            ) : pastEntries.length === 0 ? (
+                                <div style={{ color: '#475569', fontSize: '0.9rem', padding: '1rem 0' }}>
+                                    No past reflections archived.
+                                </div>
+                            ) : (
+                                pastEntries.slice(0, 5).map((item) => {
+                                    const lines = item.content.split('\n\n');
+                                    const displayTitle = lines[0] || 'Untitled Reflection';
+                                    const displayBody = lines.slice(1).join('\n\n') || '';
+                                    const dateStr = new Date(item.createdAt).toLocaleDateString('en-US', {
+                                        day: '2-digit',
+                                        month: 'short',
+                                        year: 'numeric'
+                                    }).toUpperCase();
+
+                                    return (
+                                        <div 
+                                            key={item.id} 
+                                            className="archive-card"
+                                            onClick={() => {
+                                                setTitle(displayTitle);
+                                                setEntry(displayBody);
+                                            }}
+                                            title="Click to load into editor"
+                                        >
+                                            <span className="archive-date">{dateStr}</span>
+                                            <div className="archive-title">{displayTitle}</div>
+                                        </div>
+                                    );
+                                })
+                            )}
                             <Link to="#" style={{ color: '#64748b', fontSize: '0.7rem', fontWeight: 800, letterSpacing: '2px', textDecoration: 'none', marginTop: '1rem' }}>VIEW FULL HISTORY →</Link>
                         </div>
                     </div>

@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
     LayoutDashboard, Brain, Activity, User, 
-    LogOut, Settings, MessageSquare, Shield, Bell, Info, Circle, Wind
+    LogOut, Settings, MessageSquare, Shield, Bell, Info, Circle, Wind, Heart
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
@@ -29,7 +29,9 @@ const Navbar = () => {
         { path: '/dashboard', icon: <LayoutDashboard size={18} />, label: 'OVERVIEW' },
         { path: '/mood-tracker', icon: <Activity size={18} />, label: 'SENSORS' },
         { path: '/pulse', icon: <Wind size={18} />, label: 'PULSE' },
+        { path: '/chat', icon: <Brain size={18} />, label: 'COMPANION' },
         { path: '/journal', icon: <MessageSquare size={18} />, label: 'REFLECTIONS' },
+        { path: '/support', icon: <Heart size={18} />, label: 'SUPPORT' },
         { path: '/profile', icon: <User size={18} />, label: 'PROFILE' },
     ];
 

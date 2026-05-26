@@ -28,6 +28,12 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('baselines', JSON.stringify(updated));
     };
 
+    const updateUser = (updatedFields) => {
+        const updated = { ...user, ...updatedFields };
+        setUser(updated);
+        localStorage.setItem('user', JSON.stringify(updated));
+    };
+
     const login = async (email, password) => {
         const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, { email, password });
         const userData = response.data;
@@ -53,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, register, logout, baselines, updateBaselines }}>
+        <AuthContext.Provider value={{ user, loading, login, register, logout, baselines, updateBaselines, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

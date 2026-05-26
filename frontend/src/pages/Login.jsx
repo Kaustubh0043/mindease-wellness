@@ -57,10 +57,6 @@ const Login = () => {
         setIsSubmitting(true);
         try {
             if (isRegistering) {
-                if (!email.endsWith('@institute.edu') && !email.endsWith('@mindease.com')) {
-                    alert('INSTITUTIONAL ERROR: Access only granted to @institute.edu identities.');
-                    return;
-                }
                 setShowVerify(true);
             } else {
                 const user = await login(email, password);
@@ -127,8 +123,22 @@ const Login = () => {
                 .form-panel-invisible { background: rgba(255,255,255,0.02); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.05); padding: 4rem; border-radius: 4rem; width: 100%; max-width: 500px; }
                 .luxury-input-invisible { margin-bottom: 3rem; position: relative; }
                 .luxury-input-invisible label { display: block; font-size: 0.65rem; font-weight: 800; letter-spacing: 3px; color: #64748b; margin-bottom: 1rem; }
-                .luxury-input-invisible input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem 0; color: white; font-size: 1.2rem; outline: none; transition: 0.4s; }
-                .luxury-input-invisible input:focus { border-bottom-color: #8b5cf6; }
+                .luxury-input-invisible input { width: 100%; background: transparent !important; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem 0; color: white; font-size: 1.2rem; outline: none; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+                
+                /* Override Chrome/Safari Autofill Blue/White Background */
+                .luxury-input-invisible input:-webkit-autofill {
+                    -webkit-text-fill-color: white !important;
+                    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+                    transition: background-color 5000s ease-in-out 0s;
+                }
+                
+                .luxury-input-invisible input:focus { border-bottom-color: #8b5cf6; padding-left: 0.5rem; }
+
+                .luxury-input-invisible::after {
+                    content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 1px;
+                    background: #8b5cf6; transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+                }
+                .luxury-input-invisible:focus-within::after { width: 100%; }
                 .ghost-btn { width: 100%; background: white; color: black; padding: 1.5rem; border: none; font-weight: 900; letter-spacing: 6px; cursor: pointer; border-radius: 1.5rem; transition: 0.4s; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 1rem; }
                 .ghost-btn:hover { background: #8b5cf6; color: white; }
                 .toggle-link { background: none; border: none; color: #475569; margin-top: 2rem; cursor: pointer; width: 100%; font-weight: 800; font-size: 0.7rem; letter-spacing: 2px; }

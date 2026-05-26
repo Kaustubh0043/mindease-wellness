@@ -4,9 +4,11 @@ import { User, Shield, Trash2, Mail, Camera, AlertTriangle, X, Check } from 'luc
 import { useAuth } from '../context/AuthContext';
 
 const Profile = () => {
-    const { user } = useAuth();
+    const { user, updateUser } = useAuth();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [profilePic, setProfilePic] = useState(null);
+    const [profilePic, setProfilePic] = useState(() => {
+        return localStorage.getItem(`profile_pic_${user?.email}`) || null;
+    });
     const fileInputRef = useRef(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({ name: user?.name || '', email: user?.email || '' });
@@ -15,12 +17,31 @@ const Profile = () => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onloadend = () => setProfilePic(reader.result);
+            reader.onloadend = () => {
+                const base64Data = reader.result;
+                setProfilePic(base64Data);
+                localStorage.setItem(`profile_pic_${user?.email}`, base64Data);
+                alert("PROFILE PHOTO SAVED: Image persistent on current node.");
+            };
             reader.readAsDataURL(file);
         }
     };
 
+    const handleRemovePhoto = () => {
+        if (window.confirm("Wipe profile picture and return to default node?")) {
+            setProfilePic(null);
+            localStorage.removeItem(`profile_pic_${user?.email}`);
+            alert("PHOTO ERASED: Core identity face initialized to default vector.");
+        }
+    };
+
     const handleSaveIdentity = () => {
+        const oldEmail = user?.email;
+        updateUser({ name: editData.name, email: editData.email });
+        if (profilePic && oldEmail !== editData.email) {
+            localStorage.setItem(`profile_pic_${editData.email}`, profilePic);
+            localStorage.removeItem(`profile_pic_${oldEmail}`);
+        }
         alert('IDENTITY RECALIBRATED: Core data synchronized.');
         setIsEditing(false);
     };
@@ -132,6 +153,19 @@ const Profile = () => {
                                 onChange={handleFileChange} 
                                 accept="image/*"
                             />
+                            {profilePic && (
+                                <button 
+                                    onClick={handleRemovePhoto}
+                                    style={{ 
+                                        background: 'none', border: 'none', color: '#ef4444', 
+                                        fontWeight: 800, fontSize: '0.65rem', letterSpacing: '2px', 
+                                        cursor: 'pointer', margin: '-1rem auto 2rem', textTransform: 'uppercase',
+                                        display: 'block'
+                                    }}
+                                >
+                                    REMOVE PHOTO
+                                </button>
+                            )}
                             {isEditing ? (
                                 <input 
                                     className="edit-input" 

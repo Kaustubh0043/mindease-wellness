@@ -16,6 +16,7 @@ import AboutUs from './pages/AboutUs';
 import Documentation from './pages/Documentation';
 import NeuralPulse from './pages/NeuralPulse';
 import CounselorDashboard from './pages/CounselorDashboard';
+import SupportCenter from './pages/SupportCenter';
 import './index.css';
 
 const LayoutWrapper = ({ children }) => {
@@ -80,6 +81,11 @@ function App() {
             <Route path="/profile" element={
               <ProtectedRoute role="USER">
                 <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="/support" element={
+              <ProtectedRoute role="USER">
+                <SupportCenter />
               </ProtectedRoute>
             } />
             <Route path="/chat" element={
