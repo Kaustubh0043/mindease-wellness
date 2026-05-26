@@ -40,22 +40,34 @@ const Navbar = () => {
             <style>{`
                 .ghost-sidebar {
                     width: 280px; height: 100vh; position: fixed; left: 0; top: 0;
-                    padding: 3rem 2.5rem; display: flex; flex-direction: column;
+                    padding: 2rem 1.5rem; display: flex; flex-direction: column;
                     z-index: 100; border-right: 1px solid rgba(255,255,255,0.03);
                     background: rgba(2, 6, 23, 0.4); backdrop-filter: blur(40px);
+                    overflow-y: auto;
+                }
+                /* Hide scrollbar for Chrome, Safari and Opera */
+                .ghost-sidebar::-webkit-scrollbar {
+                    display: none;
+                }
+                /* Hide scrollbar for IE, Edge and Firefox */
+                .ghost-sidebar {
+                    -ms-overflow-style: none;  /* IE and Edge */
+                    scrollbar-width: none;  /* Firefox */
                 }
                 .sidebar-logo {
                     font-family: 'Outfit'; font-weight: 800; font-size: 1.25rem;
-                    letter-spacing: 4px; margin-bottom: 4rem; color: white;
+                    letter-spacing: 4px; margin-bottom: 2rem; color: white;
                     text-decoration: none;
+                    display: block;
+                    padding-left: 1rem;
                 }
-                .nav-group { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+                .nav-group { display: flex; flex-direction: column; gap: 0.25rem; flex: 1; }
                 
                 .nav-link {
-                    display: flex; align-items: center; gap: 1.25rem;
-                    padding: 1.25rem 1.5rem; text-decoration: none;
+                    display: flex; align-items: center; gap: 1rem;
+                    padding: 0.8rem 1.2rem; text-decoration: none;
                     color: #64748b; font-weight: 800; font-size: 0.7rem;
-                    letter-spacing: 2px; border-radius: 1.25rem;
+                    letter-spacing: 2px; border-radius: 1rem;
                     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
                 }
                 .nav-link.active {
@@ -67,29 +79,29 @@ const Navbar = () => {
                 }
                 
                 .util-btn {
-                    display: flex; align-items: center; gap: 1.25rem;
-                    padding: 1.25rem 1.5rem; color: #64748b; font-weight: 800; 
-                    font-size: 0.7rem; letter-spacing: 2px; border-radius: 1.25rem;
+                    display: flex; align-items: center; gap: 1rem;
+                    padding: 0.8rem 1.2rem; color: #64748b; font-weight: 800; 
+                    font-size: 0.7rem; letter-spacing: 2px; border-radius: 1rem;
                     cursor: pointer; transition: 0.3s; position: relative;
                 }
                 .util-btn:hover { color: white; background: rgba(255,255,255,0.03); }
 
                 .notif-badge {
-                    position: absolute; top: 1.2rem; right: 1.5rem;
+                    position: absolute; top: 0.9rem; right: 1.2rem;
                     width: 8px; height: 8px; background: #8b5cf6;
                     border-radius: 50%; box-shadow: 0 0 10px #8b5cf6;
                 }
 
                 .notif-dropdown {
-                    position: absolute; left: 280px; bottom: 100px;
+                    position: absolute; left: 280px; bottom: 60px;
                     width: 320px; background: #0f172a; border: 1px solid rgba(139, 92, 246, 0.2);
                     border-radius: 2rem; padding: 2rem; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
                     z-index: 1000;
                 }
 
                 .logout-btn {
-                    margin-top: 2rem; display: flex; align-items: center; gap: 1.25rem;
-                    padding: 1.5rem; color: #ef4444; font-weight: 800; font-size: 0.7rem;
+                    margin-top: 1.5rem; display: flex; align-items: center; gap: 1rem;
+                    padding: 0.8rem 1.2rem; color: #ef4444; font-weight: 800; font-size: 0.7rem;
                     letter-spacing: 2px; border: none; background: transparent;
                     cursor: pointer; opacity: 0.6; transition: 0.3s;
                 }
