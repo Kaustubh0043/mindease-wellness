@@ -14,36 +14,43 @@ const Register = () => {
         verificationCode: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { register } = useAuth();
+    const { register, verifyEmail } = useAuth();
     const navigate = useNavigate();
-
+ 
     const validateEmail = (email) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
     };
-
-    const handleNextStep = (e) => {
+ 
+    const handleNextStep = async (e) => {
         e.preventDefault();
         if (!validateEmail(formData.email)) {
             alert('REGISTRATION DENIED: Please use a valid email address to access MindEase.');
             return;
         }
-        setStep(2);
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (formData.verificationCode !== '123456') { // Mock verification code for demo
-            alert('INVALID SECURITY KEY: Please check your institutional inbox for the 6-digit access code.');
-            return;
-        }
-        
         setIsSubmitting(true);
         try {
             await register(formData.name, formData.email, formData.password, formData.role);
+            setStep(2);
+        } catch (error) {
+            console.error("Registration initiation failed:", error);
+            const errMsg = error.response?.data?.message || 'Registration failed. The email may already be registered.';
+            alert('REGISTRATION FAILED: ' + errMsg);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+ 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        try {
+            await verifyEmail(formData.email, formData.verificationCode);
             navigate('/calibration');
         } catch (error) {
-            alert('Registration Failed: Institutional database error.');
+            console.error("Verification failed:", error);
+            const errMsg = error.response?.data?.message || 'INVALID SECURITY KEY: Please check your inbox for the 6-digit access code.';
+            alert(errMsg === "INVALID_CODE" ? 'INVALID SECURITY KEY: Please check your inbox for the 6-digit access code.' : errMsg);
         } finally {
             setIsSubmitting(false);
         }
@@ -183,8 +190,8 @@ const Register = () => {
                                     placeholder="Create Key" 
                                 />
                             </div>
-                            <button type="submit" className="ghost-btn">
-                                NEXT: VERIFY IDENTITY <ArrowRight size={14} />
+                            <button type="submit" className="ghost-btn" disabled={isSubmitting}>
+                                {isSubmitting ? <Loader2 className="spin" /> : <>NEXT: VERIFY IDENTITY <ArrowRight size={14} /></>}
                             </button>
                         </form>
                     ) : (

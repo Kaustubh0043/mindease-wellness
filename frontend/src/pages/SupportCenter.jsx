@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { 
     Heart, Phone, Send, Check, Loader2, Sparkles, 
-    Waves, Compass, Eye, ShieldAlert, AlertCircle, HelpCircle, Shield
+    Waves, Compass, Eye, ShieldAlert, AlertCircle, HelpCircle, Shield,
+    Clock, Globe, Mail
 } from 'lucide-react';
 import axios from 'axios';
 import { getEmpatheticSupport } from '../services/aiService';
@@ -106,9 +107,75 @@ const SupportCenter = () => {
     };
 
     const crisisLines = [
-        { name: "National Crisis Line", phone: "988", desc: "Free, confidential 24/7 support for suicide & mental health distress." },
-        { name: "Student Support Helpline", phone: "1-800-273-8255", desc: "Dedicated counseling network for university and high school students." },
-        { name: "MindEase Campus Response Desk", phone: "Ext. 9110", desc: "Local institutional emergency response and counselor dispatch." }
+        {
+            name: "Vandrevala Foundation",
+            desc: "Cyrus & Priya Vandrevala Foundation is a non-profit organisation that aims to provide significant funding and aid contributions for mental health.",
+            phone: "9999666555",
+            phoneLabel: "9999666555 (WhatsApp chat support available)",
+            time: "24x7 | 7 days a week",
+            languages: "English, Hindi, Gujarati, Bangla, Kannada, Tamil, Telugu, Malayalam, Odia, Marathi, Tulu",
+            email: "help@vandrevalafoundation.com",
+            website: "https://www.vandrevalafoundation.com/"
+        },
+        {
+            name: "Tele MANAS",
+            desc: "Tele-MANAS is a Government of India initiative, providing a 24/7 free mental health support service. Available in English & 20 other regional languages.",
+            phone: "14416",
+            phoneLabel: "14416",
+            time: "24/7 | 7 days a week",
+            languages: "Assamese, Bangla, English, Gujarati, Hindi, Kannada, Malayalam, Marathi, Nepali, Punjabi, Sanskrit, Sindhi, Tamil, Telugu, Urdu",
+            website: "https://telemanas.mohfw.gov.in/home"
+        },
+        {
+            name: "MPower Minds",
+            desc: "The Mpower Minds Helpline is a mental health service dedicated to providing free, confidential support to individuals experiencing mental distress.",
+            phone: "1800-120-820050",
+            phoneLabel: "1800-120-820050",
+            time: "24 hours | 7 days a week",
+            languages: "English, Hindi, Marathi",
+            email: "mpowerminds.info@abet.co.in",
+            website: "https://mpowerminds.com/oneonone"
+        },
+        {
+            name: "AASRA",
+            desc: "Free, confidential helpline answered by professionally trained volunteers. So, whatever your concerns are, you can be rest assured that you will be heard.",
+            phone: "02227546669",
+            phoneLabel: "02227546669",
+            time: "24/7 | 7 days a week",
+            languages: "English, Hindi",
+            email: "aasrahelpline@yahoo.com",
+            website: "https://www.aasra.info/helpline.html"
+        },
+        {
+            name: "Jeevan Aastha",
+            desc: "Jeevan Aastha Helpline is a mental health support helpline aimed at providing immediate emotional assistance to individuals experiencing distress.",
+            phone: "18002333330",
+            phoneLabel: "18002333330",
+            time: "24/7 | 7 days a week",
+            languages: "English, Hindi",
+            email: "jeevanaastha@jeevanaastha.com",
+            website: "https://www.jeevanaastha.com/"
+        },
+        {
+            name: "Fortis",
+            desc: "The helpline is open to all. It runs 24x7 and ensures crisis intervention by expert psychologists from Fortis Healthcare.",
+            phone: "+91-8376804102",
+            phoneLabel: "+91-8376804102",
+            time: "24 hours | 7 days a week",
+            languages: "Assamese, Bangla, English, Gujarati, Hindi, Kannada, Konkani, Marathi, Malayalam, Punjabi, Tamil, Telugu, Urdu, Rajasthani, Achiku",
+            email: "mentalhealth@fortishealthcare.com",
+            website: "https://www.fortishealthcare.com"
+        },
+        {
+            name: "MindEase Campus Response Desk",
+            desc: "Local institutional emergency response and counselor dispatch.",
+            phone: "+91 8805565585",
+            phoneLabel: "+91 8805565585 (Ext. 9110)",
+            time: "24x7 | 7 days a week",
+            languages: "English, Hindi",
+            email: "wellness@mindease.edu",
+            website: "https://mindease.edu/wellness"
+        }
     ];
 
     return (
@@ -304,6 +371,62 @@ const SupportCenter = () => {
                     letter-spacing: 1px;
                     padding: 0.4rem 1rem;
                     border-radius: 2rem;
+                }
+                .crisis-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                    gap: 2rem;
+                    margin-top: 2rem;
+                }
+                .crisis-card-v2 {
+                    background: rgba(255, 255, 255, 0.02);
+                    backdrop-filter: blur(25px);
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    border-radius: 2rem;
+                    padding: 2.5rem;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+                }
+                .crisis-card-v2:hover {
+                    border-color: rgba(139, 92, 246, 0.3);
+                    transform: translateY(-8px);
+                    box-shadow: 0 20px 40px -20px rgba(139, 92, 246, 0.15);
+                    background: rgba(139, 92, 246, 0.02);
+                }
+                .crisis-card-header {
+                    margin-bottom: 1.5rem;
+                }
+                .crisis-card-title {
+                    font-family: 'Playfair Display', serif;
+                    font-size: 1.6rem;
+                    color: white;
+                    margin-bottom: 0.75rem;
+                }
+                .crisis-card-desc {
+                    color: #94a3b8;
+                    font-size: 0.88rem;
+                    line-height: 1.6;
+                    margin-bottom: 1.5rem;
+                }
+                .crisis-detail-item {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 0.75rem;
+                    font-size: 0.85rem;
+                    color: #cbd5e1;
+                    margin-bottom: 1rem;
+                    line-height: 1.4;
+                }
+                .crisis-detail-icon {
+                    color: #8b5cf6;
+                    margin-top: 0.15rem;
+                    flex-shrink: 0;
+                }
+                .crisis-detail-label {
+                    font-weight: 700;
+                    color: #8b5cf6;
                 }
             `}</style>
 
@@ -534,16 +657,58 @@ const SupportCenter = () => {
                 <p style={{ color: '#64748b', marginBottom: '2.5rem', maxWidth: '800px' }}>
                     If you are in immediate danger of hurting yourself or others, please use these free resources to speak with a trained professional.
                 </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <div className="crisis-grid">
                     {crisisLines.map((line, idx) => (
-                        <div key={idx} className="crisis-card">
-                            <div>
-                                <h4 style={{ fontWeight: 800, fontSize: '1.1rem', color: 'white', marginBottom: '0.25rem' }}>{line.name}</h4>
-                                <p style={{ color: '#64748b', fontSize: '0.9rem' }}>{line.desc}</p>
+                        <div key={idx} className="crisis-card-v2">
+                            <div className="crisis-card-header">
+                                <h4 className="crisis-card-title">{line.name}</h4>
+                                <p className="crisis-card-desc">{line.desc}</p>
+                                
+                                <div className="crisis-detail-item">
+                                    <Phone size={15} className="crisis-detail-icon" />
+                                    <div>
+                                        <span className="crisis-detail-label">Helpline: </span>
+                                        {line.phoneLabel}
+                                    </div>
+                                </div>
+                                <div className="crisis-detail-item">
+                                    <Clock size={15} className="crisis-detail-icon" />
+                                    <div>
+                                        <span className="crisis-detail-label">Time: </span>
+                                        {line.time}
+                                    </div>
+                                </div>
+                                <div className="crisis-detail-item">
+                                    <Globe size={15} className="crisis-detail-icon" />
+                                    <div>
+                                        <span className="crisis-detail-label">Languages: </span>
+                                        {line.languages}
+                                    </div>
+                                </div>
+                                {line.email && (
+                                    <div className="crisis-detail-item">
+                                        <Mail size={15} className="crisis-detail-icon" />
+                                        <div>
+                                            <span className="crisis-detail-label">Email: </span>
+                                            {line.email}
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="crisis-detail-item">
+                                    <Globe size={15} className="crisis-detail-icon" />
+                                    <div>
+                                        <span className="crisis-detail-label">Website: </span>
+                                        <a href={line.website} target="_blank" rel="noopener noreferrer" style={{ color: '#8b5cf6', textDecoration: 'underline' }}>
+                                            {line.website.replace('https://', '')}
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                            <a href={`tel:${line.phone.replace(/[^0-9]/g, '')}`} className="crisis-btn">
-                                CALL {line.phone}
-                            </a>
+                            <div style={{ marginTop: '1.5rem' }}>
+                                <a href={`tel:${line.phone.replace(/[^0-9+]/g, '')}`} className="crisis-btn" style={{ display: 'block', textAlign: 'center' }}>
+                                    CALL {line.phone}
+                                </a>
+                            </div>
                         </div>
                     ))}
                 </div>

@@ -3,6 +3,7 @@ package com.mindease.app.controller;
 import com.mindease.app.dto.AuthResponse;
 import com.mindease.app.dto.LoginRequest;
 import com.mindease.app.dto.RegisterRequest;
+import com.mindease.app.dto.VerifyRequest;
 import com.mindease.app.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,5 +30,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<AuthResponse> verify(@RequestBody VerifyRequest request) {
+        return ResponseEntity.ok(authService.verifyEmail(request.getEmail(), request.getCode()));
     }
 }

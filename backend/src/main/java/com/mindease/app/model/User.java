@@ -24,6 +24,12 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @Column(nullable = false)
+    private boolean verified = false;
+
+    @Column(length = 6)
+    private String verificationCode;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -34,6 +40,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.verified = false;
     }
 
     // Getters and Setters
@@ -47,6 +54,10 @@ public class User {
     public void setPassword(String password) { this.password = password; }
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
+    public boolean isVerified() { return verified; }
+    public void setVerified(boolean verified) { this.verified = verified; }
+    public String getVerificationCode() { return verificationCode; }
+    public void setVerificationCode(String verificationCode) { this.verificationCode = verificationCode; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 

@@ -46,6 +46,13 @@ export const AuthProvider = ({ children }) => {
         const url = `${import.meta.env.VITE_API_URL}/auth/register`;
         console.log("NEURAL HANDSHAKE INITIATED AT:", url);
         const response = await axios.post(url, { name, email, password, role });
+        return response.data;
+    };
+
+    const verifyEmail = async (email, code) => {
+        const url = `${import.meta.env.VITE_API_URL}/auth/verify`;
+        console.log("VERIFYING IDENTITY AT:", url);
+        const response = await axios.post(url, { email, code });
         const userData = response.data;
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
@@ -59,7 +66,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, register, logout, baselines, updateBaselines, updateUser }}>
+        <AuthContext.Provider value={{ user, loading, login, register, verifyEmail, logout, baselines, updateBaselines, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

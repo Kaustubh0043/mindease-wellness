@@ -40,7 +40,7 @@ const Login = () => {
     const [showVerify, setShowVerify] = useState(false);
     const [name, setName] = useState('');
     const [verifyCode, setVerifyCode] = useState('');
-    const { login, register } = useAuth();
+    const { login, register, verifyEmail } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -57,13 +57,21 @@ const Login = () => {
         setIsSubmitting(true);
         try {
             if (isRegistering) {
+                await register(name || 'Overwatch Alpha', email, password, 'USER');
                 setShowVerify(true);
             } else {
                 const user = await login(email, password);
                 navigate(user.role === 'ADMIN' ? '/admin' : '/dashboard');
             }
         } catch (error) {
-            alert('Access Denied');
+            console.error("Auth action failed:", error);
+            const errMsg = error.response?.data?.message;
+            if (errMsg === 'EMAIL_NOT_VERIFIED') {
+                alert('EMAIL NOT VERIFIED: Please check your inbox for the 6-digit access code to verify your identity.');
+                setShowVerify(true);
+            } else {
+                alert(errMsg || 'Access Denied: Invalid credentials or database error.');
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -71,17 +79,19 @@ const Login = () => {
 
     const handleVerify = async (e) => {
         e.preventDefault();
-        if (verifyCode === '123456') {
-            try {
-                await register(name || 'Overwatch Alpha', email, password);
-                alert('IDENTITY VERIFIED: Neural Handshake Complete. You may now log in.');
-                setShowVerify(false);
-                setIsRegistering(false);
-            } catch (error) {
-                alert('HANDSHAKE FAILED: Institutional database unreachable.');
-            }
-        } else {
-            alert('SECURITY BREACH: Invalid Neural Key.');
+        setIsSubmitting(true);
+        try {
+            await verifyEmail(email, verifyCode);
+            alert('IDENTITY VERIFIED: Neural Handshake Complete.');
+            setShowVerify(false);
+            setIsRegistering(false);
+            navigate('/calibration');
+        } catch (error) {
+            console.error("Verification failed:", error);
+            const errMsg = error.response?.data?.message || 'SECURITY BREACH: Invalid Neural Key.';
+            alert(errMsg === "INVALID_CODE" ? 'SECURITY BREACH: Invalid Neural Key.' : errMsg);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
