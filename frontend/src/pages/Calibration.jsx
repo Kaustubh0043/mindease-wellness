@@ -117,29 +117,28 @@ const Calibration = () => {
             const stabilityLabel = avgEnergy > 80 ? 'Optimal' : avgEnergy > 50 ? 'Stable' : 'Volatile';
             
             setTimeout(async () => {
+                const token = JSON.parse(localStorage.getItem('user'))?.token;
+                const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+                
                 try {
-                    const token = JSON.parse(localStorage.getItem('user'))?.token;
-                    const config = { headers: { Authorization: `Bearer ${token}` } };
-                    
                     // Beam data to the Master Database
                     await axios.post(`${import.meta.env.VITE_API_URL}/moods`, {
                         mood: stabilityLabel.toUpperCase() === 'OPTIMAL' ? 'HAPPY' : (stabilityLabel.toUpperCase() === 'STABLE' ? 'NEUTRAL' : 'STRESS'),
                         note: `Neural Calibration Complete: ${avgEnergy}% Energy detected.`,
-                        intensity: Math.round(avgEnergy / 10)
+                        intensity: Math.round(avgEnergy / 10),
+                        date: new Date().toISOString().split('T')[0] // Required by backend
                     }, config);
-
-                    updateBaselines({
-                        energy: avgEnergy,
-                        stability: stabilityLabel,
-                        resonance: Math.round(avgEnergy * 0.8),
-                        calibrationComplete: true
-                    });
-                    navigate('/dashboard');
                 } catch (error) {
                     console.error("Neural Sync Failed:", error);
-                    // Fallback to local only if database is unreachable
-                    navigate('/dashboard');
                 }
+
+                updateBaselines({
+                    energy: avgEnergy,
+                    stability: stabilityLabel,
+                    resonance: Math.round(avgEnergy * 0.8),
+                    calibrationComplete: true
+                });
+                navigate('/dashboard');
             }, 4000);
         }
     };
