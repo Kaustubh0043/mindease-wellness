@@ -66,6 +66,7 @@ public class AuthService {
                                         .name(user.getName())
                                         .role(user.getRole().name())
                                         .token(null) // unverified users do not get a token yet
+                                        .createdAt(user.getCreatedAt() != null ? user.getCreatedAt().toString() : java.time.LocalDateTime.now().toString())
                                         .build();
                 } catch (Exception e) {
                         log.error("HANDSHAKE FAILED: Database rejection for {}. Reason: {}", request.getEmail(),
@@ -91,6 +92,7 @@ public class AuthService {
                                 .email(user.getEmail())
                                 .name(user.getName())
                                 .role(user.getRole().name())
+                                .createdAt(user.getCreatedAt() != null ? user.getCreatedAt().toString() : java.time.LocalDateTime.now().toString())
                                 .build();
         }
 
@@ -144,6 +146,7 @@ public class AuthService {
                                         .email(user.getEmail())
                                         .name(user.getName())
                                         .role(user.getRole().name())
+                                        .createdAt(user.getCreatedAt() != null ? user.getCreatedAt().toString() : java.time.LocalDateTime.now().toString())
                                         .build();
 
                 } catch (ResponseStatusException e) {
@@ -174,6 +177,7 @@ public class AuthService {
                                 .email(user.getEmail())
                                 .name(user.getName())
                                 .role(user.getRole().name())
+                                .createdAt(user.getCreatedAt() != null ? user.getCreatedAt().toString() : java.time.LocalDateTime.now().toString())
                                 .build();
         }
 }

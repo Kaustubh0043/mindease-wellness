@@ -4,7 +4,7 @@ import { User, Shield, Trash2, Mail, Camera, AlertTriangle, X, Check } from 'luc
 import { useAuth } from '../context/AuthContext';
 
 const Profile = () => {
-    const { user, updateUser } = useAuth();
+    const { user, updateUser, baselines } = useAuth();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [profilePic, setProfilePic] = useState(() => {
         return localStorage.getItem(`profile_pic_${user?.email}`) || null;
@@ -12,6 +12,17 @@ const Profile = () => {
     const fileInputRef = useRef(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({ name: user?.name || '', email: user?.email || '' });
+
+    const formatMemberDate = (dateString) => {
+        if (!dateString) return 'April 2026';
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return 'April 2026';
+            return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        } catch (e) {
+            return 'April 2026';
+        }
+    };
     
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -203,11 +214,13 @@ const Profile = () => {
                             </div>
                             <div className="detail-card">
                                 <span className="label">SYSTEM STATUS</span>
-                                <div className="value" style={{ color: '#8b5cf6' }}>Optimal Resonance</div>
+                                <div className="value" style={{ color: '#8b5cf6' }}>
+                                    {baselines?.calibrationComplete ? `${baselines.stability} Resonance` : 'Awaiting Calibration'}
+                                </div>
                             </div>
                             <div className="detail-card">
                                 <span className="label">MEMBER SINCE</span>
-                                <div className="value">April 2026</div>
+                                <div className="value">{formatMemberDate(user?.createdAt)}</div>
                             </div>
                             <div className="detail-card">
                                 <span className="label">NEURAL KEY</span>

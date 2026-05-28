@@ -45,11 +45,15 @@ const UserDashboard = () => {
         if (user) {
             setUserData({ 
                 name: user.name, 
-                energy: baselines.energy, 
-                resonance: baselines.stability 
+                energy: baselines.calibrationComplete ? baselines.energy : 'Pending', 
+                resonance: baselines.calibrationComplete ? baselines.stability : 'Not Calibrated' 
             });
 
             const getAIInsight = async () => {
+                if (!baselines.calibrationComplete) {
+                    setAiInsight("Awaiting neural calibration. Complete the assessment to initialize the AI synthesis.");
+                    return;
+                }
                 const insight = await generateNeuralRevelation(baselines, user.name);
                 setAiInsight(insight);
             };
@@ -245,17 +249,17 @@ const UserDashboard = () => {
                             background: 'rgba(139, 92, 246, 0.05)',
                             transition: 'all 0.3s'
                         }} onMouseOver={e => e.currentTarget.style.background = 'rgba(139, 92, 246, 0.2)'} onMouseOut={e => e.currentTarget.style.background = 'rgba(139, 92, 246, 0.05)'}>
-                            RE-SYNC
+                            {baselines.calibrationComplete ? 'RE-SYNC' : 'CALIBRATE'}
                         </Link>
                         <div>
                             <div className="card-title">Mental Energy</div>
-                            <div className="card-value">{baselines.energy}%</div>
+                            <div className="card-value">{baselines.calibrationComplete ? `${baselines.energy}%` : 'Pending'}</div>
                         </div>
                     </div>
 
                     <div className="luxury-card span-small">
                         <Heart className="card-icon" size={32} />
-                        <div><div className="card-title">Mood Stability</div><div className="card-value">{baselines.stability}</div></div>
+                        <div><div className="card-title">Mood Stability</div><div className="card-value">{baselines.calibrationComplete ? baselines.stability : 'Not Calibrated'}</div></div>
                     </div>
 
                     <div className="luxury-card span-wide" style={{ gridRow: 'span 2', padding: '0', overflow: 'hidden' }}>
@@ -297,7 +301,7 @@ const UserDashboard = () => {
                             {isPlaying ? <div className="audio-wave">{[1,2,3,4,5].map(i => <div key={i} className="wave-bar" style={{ animationDelay: `${i*0.1}s` }} />)}</div> : <Waves color="#8b5cf6" size={32} />}
                         </div>
                         <div style={{ display: 'flex', gap: '1rem', marginTop: '2.5rem' }}>
-                            <div className="ai-bubble" style={{ flex: 1 }}><strong>Context Suggestion:</strong> {baselines.energy < 70 ? 'Low energy detected. Use Lo-Fi Focus.' : 'Stability high. Deep Rain recommended.'}</div>
+                            <div className="ai-bubble" style={{ flex: 1 }}><strong>Context Suggestion:</strong> {baselines.calibrationComplete ? (baselines.energy < 70 ? 'Low energy detected. Use Lo-Fi Focus.' : 'Stability high. Deep Rain recommended.') : 'Awaiting calibration for personalized context suggestions.'}</div>
                             <button onClick={toggleAudio} style={{ background: isPlaying ? '#ef4444' : 'white', color: isPlaying ? 'white' : 'black', border: 'none', padding: '1rem 2rem', borderRadius: '1.5rem', fontWeight: 900, cursor: 'pointer' }}>{isPlaying ? 'STOP NEURAL STREAM' : 'INITIALIZE AUDIO'}</button>
                         </div>
                     </div>
