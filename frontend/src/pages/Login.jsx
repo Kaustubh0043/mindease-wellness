@@ -186,6 +186,31 @@ const Login = () => {
                 .card-tag { color: #8b5cf6; font-weight: 800; font-size: 0.7rem; letter-spacing: 4px; margin-bottom: 1rem; }
                 .journey-item { display: flex; gap: 4rem; margin-bottom: 8rem; padding-bottom: 4rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
                 .journey-num { font-size: 4rem; font-family: 'Playfair Display'; color: #1e293b; }
+
+                @media (max-width: 1024px) {
+                    .hero-section {
+                        flex-direction: column;
+                        padding: 12vh 2rem 5vh 2rem;
+                        gap: 4rem;
+                        text-align: center;
+                    }
+                    .info-grid {
+                        grid-template-columns: 1fr;
+                        gap: 2rem;
+                        margin-top: 3rem;
+                    }
+                    .journey-item {
+                        flex-direction: column;
+                        gap: 1.5rem;
+                        margin-bottom: 4rem;
+                        padding-bottom: 2rem;
+                        align-items: center;
+                        text-align: center;
+                    }
+                    .massive-title {
+                        font-size: 3.5rem;
+                    }
+                }
             `}</style>
 
             <div className="liquid-bg" />

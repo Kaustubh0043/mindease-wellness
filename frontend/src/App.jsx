@@ -45,17 +45,10 @@ const LayoutWrapper = ({ children }) => {
   }
 
   return (
-    <div className="app-container" style={{ background: '#020617', minHeight: '100vh', width: '100%', position: 'relative', overflowX: 'hidden' }}>
+    <div className="app-container">
       <Navbar />
-      <main className="main-content" style={{ 
-        marginLeft: '280px',
-        width: 'calc(100% - 280px)',
-        minHeight: '100vh',
-        display: 'flex', 
-        justifyContent: 'center',
-        padding: '4rem 2rem'
-      }}>
-        <div style={{ width: '100%', maxWidth: '1100px' }}>
+      <main className="main-content">
+        <div className="content-inner">
           {children}
         </div>
       </main>

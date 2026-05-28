@@ -96,6 +96,26 @@ const Navbar = () => {
                     cursor: pointer; opacity: 0.6; transition: 0.3s;
                 }
                 .logout-btn:hover { opacity: 1; }
+
+                @media (max-width: 1024px) {
+                    .ghost-sidebar {
+                        width: 100%; height: 75px; position: fixed; left: 0; top: 0;
+                        padding: 0.5rem 1.5rem; flex-direction: row; justify-content: space-between;
+                        align-items: center; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05);
+                        background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(25px);
+                    }
+                    .sidebar-logo { margin-bottom: 0; padding-left: 0; font-size: 1.1rem; }
+                    .nav-group { flex-direction: row; gap: 0.5rem; flex: none; align-items: center; }
+                    .nav-link { padding: 0.5rem 0.8rem; font-size: 0.65rem; letter-spacing: 1px; gap: 0.5rem; }
+                    .nav-link span { display: none; }
+                    .util-btn { padding: 0.5rem 0.8rem; }
+                    .util-btn span { display: none; }
+                    .logout-btn { margin-top: 0; padding: 0.5rem; opacity: 0.8; }
+                    .logout-btn span { display: none; }
+                    .notif-dropdown {
+                        left: auto; right: 10px; top: 75px; bottom: auto; width: 300px;
+                    }
+                }
             `}</style>
 
             <Link to="/" className="sidebar-logo">MINDEASE</Link>

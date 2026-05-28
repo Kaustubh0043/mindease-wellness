@@ -159,6 +159,23 @@ const Register = () => {
                 }
 
                 .form-panel-invisible { max-width: 500px; }
+
+                @media (max-width: 1024px) {
+                    .register-grid {
+                        grid-template-columns: 1fr;
+                        padding: 10vh 2rem 5vh 2rem;
+                        gap: 3rem;
+                        text-align: center;
+                    }
+                    .back-btn {
+                        position: absolute;
+                        top: 2rem;
+                        left: 2rem;
+                    }
+                    .form-panel-invisible {
+                        max-width: 100%;
+                    }
+                }
             `}</style>
 
             <div className="liquid-bg" />

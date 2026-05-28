@@ -243,6 +243,30 @@ const Profile = () => {
                     letter-spacing: 2px; font-size: 0.7rem; cursor: pointer;
                     display: block; width: 100%;
                 }
+
+                @media (max-width: 900px) {
+                    .profile-grid {
+                        grid-template-columns: 1fr;
+                        gap: 2rem;
+                        margin-top: 2rem;
+                    }
+                    .avatar-section {
+                        padding: 2.5rem 2rem;
+                        border-radius: 2.5rem;
+                    }
+                    .details-section {
+                        grid-template-columns: 1fr;
+                        gap: 1.5rem;
+                    }
+                    .detail-card {
+                        padding: 2rem;
+                        border-radius: 2rem;
+                    }
+                    .massive-title {
+                        font-size: 3rem;
+                        margin-bottom: 2rem;
+                    }
+                }
             `}</style>
 
             <div className="liquid-bg" />

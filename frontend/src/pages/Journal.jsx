@@ -112,6 +112,30 @@ const Journal = () => {
                     box-shadow: 0 0 40px rgba(139, 92, 246, 0.4);
                     letter-spacing: 8px;
                 }
+
+                @media (max-width: 900px) {
+                    .journal-interface {
+                        grid-template-columns: 1fr;
+                        gap: 2rem;
+                        margin-top: 2rem;
+                    }
+                    .write-section {
+                        padding: 3rem 2rem;
+                        border-radius: 2.5rem;
+                    }
+                    .luxury-input {
+                        font-size: 1.8rem;
+                        margin-bottom: 2rem;
+                    }
+                    .luxury-textarea {
+                        min-height: 250px;
+                        font-size: 1.1rem;
+                    }
+                    .massive-title {
+                        font-size: 3rem;
+                        margin-bottom: 2rem;
+                    }
+                }
             `}</style>
 
             <div className="liquid-bg" />

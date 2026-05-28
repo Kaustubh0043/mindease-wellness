@@ -214,6 +214,34 @@ const UserDashboard = () => {
                 @keyframes wave { 0%, 100% { height: 5px; } 50% { height: 25px; } }
                 .audio-wave { display: flex; gap: 3px; align-items: flex-end; height: 30px; }
                 .wave-bar { width: 3px; background: #8b5cf6; border-radius: 2px; animation: wave 1s infinite ease-in-out; }
+
+                @media (max-width: 900px) {
+                    .bento-grid-luxury {
+                        grid-template-columns: 1fr;
+                        grid-auto-rows: auto;
+                        gap: 1.5rem;
+                    }
+                    .luxury-card {
+                        grid-column: span 1 !important;
+                        grid-row: span 1 !important;
+                        padding: 2.5rem;
+                        border-radius: 2.5rem;
+                        height: auto;
+                        min-height: 240px;
+                    }
+                    .span-large {
+                        height: 350px;
+                    }
+                    .span-wide {
+                        padding: 2.5rem !important;
+                    }
+                    .massive-greeting {
+                        font-size: 3rem;
+                    }
+                    .welcome-header {
+                        margin-bottom: 4rem;
+                    }
+                }
             `}</style>
 
             <div className="liquid-bg" />
