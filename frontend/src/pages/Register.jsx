@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -14,8 +14,34 @@ const Register = () => {
         verificationCode: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { register, verifyEmail } = useAuth();
+    const { register, verifyEmail, loginWithGoogle } = useAuth();
     const navigate = useNavigate();
+
+    const handleGoogleSuccess = async (response) => {
+        setIsSubmitting(true);
+        try {
+            const user = await loginWithGoogle(response.credential);
+            navigate(user.role === 'ADMIN' ? '/admin' : '/dashboard');
+        } catch (error) {
+            console.error("Google authentication failed:", error);
+            alert("Google Sign-In failed. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    useEffect(() => {
+        if (window.google && step === 1) {
+            window.google.accounts.id.initialize({
+                client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+                callback: handleGoogleSuccess
+            });
+            window.google.accounts.id.renderButton(
+                document.getElementById("googleRegisterButton"),
+                { theme: "filled_blue", size: "large", width: "100%", shape: "pill" }
+            );
+        }
+    }, [step]);
  
     const validateEmail = (email) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -159,41 +185,51 @@ const Register = () => {
                     className="form-panel-invisible"
                 >
                     {step === 1 ? (
-                        <form onSubmit={handleNextStep}>
-                            <div className="luxury-input-invisible">
-                                <label>FULL IDENTITY</label>
-                                <input 
-                                    type="text" 
-                                    value={formData.name} 
-                                    onChange={(e) => setFormData({...formData, name: e.target.value})} 
-                                    required 
-                                    placeholder="Your Name" 
-                                />
+                        <>
+                            <form onSubmit={handleNextStep}>
+                                <div className="luxury-input-invisible">
+                                    <label>FULL IDENTITY</label>
+                                    <input 
+                                        type="text" 
+                                        value={formData.name} 
+                                        onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                                        required 
+                                        placeholder="Your Name" 
+                                    />
+                                </div>
+                                <div className="luxury-input-invisible">
+                                    <label>INSTITUTIONAL EMAIL</label>
+                                    <input 
+                                        type="email" 
+                                        value={formData.email} 
+                                        onChange={(e) => setFormData({...formData, email: e.target.value})} 
+                                        required 
+                                        placeholder="name@university.edu" 
+                                    />
+                                </div>
+                                <div className="luxury-input-invisible">
+                                    <label>SECURITY ACCESS KEY</label>
+                                    <input 
+                                        type="password" 
+                                        value={formData.password} 
+                                        onChange={(e) => setFormData({...formData, password: e.target.value})} 
+                                        required 
+                                        placeholder="Create Key" 
+                                    />
+                                </div>
+                                <button type="submit" className="ghost-btn" disabled={isSubmitting}>
+                                    {isSubmitting ? <Loader2 className="spin" /> : <>NEXT: VERIFY IDENTITY <ArrowRight size={14} /></>}
+                                </button>
+                            </form>
+
+                            <div style={{ display: 'flex', alignItems: 'center', margin: '2rem 0', color: '#475569' }}>
+                                <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.05)' }}></div>
+                                <span style={{ padding: '0 1rem', fontSize: '0.65rem', fontWeight: '800', letterSpacing: '2px' }}>OR</span>
+                                <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.05)' }}></div>
                             </div>
-                            <div className="luxury-input-invisible">
-                                <label>INSTITUTIONAL EMAIL</label>
-                                <input 
-                                    type="email" 
-                                    value={formData.email} 
-                                    onChange={(e) => setFormData({...formData, email: e.target.value})} 
-                                    required 
-                                    placeholder="name@university.edu" 
-                                />
-                            </div>
-                            <div className="luxury-input-invisible">
-                                <label>SECURITY ACCESS KEY</label>
-                                <input 
-                                    type="password" 
-                                    value={formData.password} 
-                                    onChange={(e) => setFormData({...formData, password: e.target.value})} 
-                                    required 
-                                    placeholder="Create Key" 
-                                />
-                            </div>
-                            <button type="submit" className="ghost-btn" disabled={isSubmitting}>
-                                {isSubmitting ? <Loader2 className="spin" /> : <>NEXT: VERIFY IDENTITY <ArrowRight size={14} /></>}
-                            </button>
-                        </form>
+
+                            <div id="googleRegisterButton" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}></div>
+                        </>
                     ) : (
                         <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={handleSubmit}>
                             <div style={{ marginBottom: '3rem', borderLeft: '2px solid #8b5cf6', paddingLeft: '1.5rem' }}>

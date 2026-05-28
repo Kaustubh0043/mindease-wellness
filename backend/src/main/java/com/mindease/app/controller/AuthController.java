@@ -36,4 +36,9 @@ public class AuthController {
     public ResponseEntity<AuthResponse> verify(@RequestBody VerifyRequest request) {
         return ResponseEntity.ok(authService.verifyEmail(request.getEmail(), request.getCode()));
     }
+
+    @PostMapping("/google")
+    public ResponseEntity<AuthResponse> loginWithGoogle(@RequestBody com.mindease.app.dto.GoogleLoginRequest request) {
+        return ResponseEntity.ok(authService.loginWithGoogle(request));
+    }
 }

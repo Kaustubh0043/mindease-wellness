@@ -40,9 +40,22 @@ const Login = () => {
     const [showVerify, setShowVerify] = useState(false);
     const [name, setName] = useState('');
     const [verifyCode, setVerifyCode] = useState('');
-    const { login, register, verifyEmail } = useAuth();
+    const { login, register, verifyEmail, loginWithGoogle } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const handleGoogleSuccess = async (response) => {
+        setIsSubmitting(true);
+        try {
+            const user = await loginWithGoogle(response.credential);
+            navigate(user.role === 'ADMIN' ? '/admin' : '/dashboard');
+        } catch (error) {
+            console.error("Google authentication failed:", error);
+            alert("Google Sign-In failed. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     useEffect(() => {
         if (location.hash) {
@@ -51,6 +64,19 @@ const Login = () => {
             if (element) element.scrollIntoView({ behavior: 'smooth' });
         }
     }, [location]);
+
+    useEffect(() => {
+        if (window.google) {
+            window.google.accounts.id.initialize({
+                client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+                callback: handleGoogleSuccess
+            });
+            window.google.accounts.id.renderButton(
+                document.getElementById("googleSignInButton"),
+                { theme: "filled_blue", size: "large", width: "100%", shape: "pill" }
+            );
+        }
+    }, [isRegistering]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -193,6 +219,14 @@ const Login = () => {
                             {isSubmitting ? <Loader2 className="spin" /> : <>{isRegistering ? 'INITIATE' : 'ENTER'} <ArrowRight size={16} /></>}
                         </button>
                     </form>
+
+                    <div style={{ display: 'flex', alignItems: 'center', margin: '2rem 0', color: '#475569' }}>
+                        <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.05)' }}></div>
+                        <span style={{ padding: '0 1rem', fontSize: '0.65rem', fontWeight: '800', letterSpacing: '2px' }}>OR</span>
+                        <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.05)' }}></div>
+                    </div>
+
+                    <div id="googleSignInButton" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}></div>
                     <button onClick={() => setIsRegistering(!isRegistering)} className="toggle-link">
                         {isRegistering ? 'ALREADY VERIFIED? LOGIN' : 'NEW STUDENT? INITIALIZE IDENTITY'}
                     </button>

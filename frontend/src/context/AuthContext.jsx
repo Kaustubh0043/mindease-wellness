@@ -59,6 +59,16 @@ export const AuthProvider = ({ children }) => {
         return userData;
     };
 
+    const loginWithGoogle = async (idToken) => {
+        const url = `${import.meta.env.VITE_API_URL}/auth/google`;
+        console.log("GOOGLE OAUTH HANDSHAKE INITIATED AT:", url);
+        const response = await axios.post(url, { idToken });
+        const userData = response.data;
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
+        return userData;
+    };
+
     const logout = () => {
         setUser(null);
         localStorage.removeItem('user');
@@ -66,7 +76,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, register, verifyEmail, logout, baselines, updateBaselines, updateUser }}>
+        <AuthContext.Provider value={{ user, loading, login, register, verifyEmail, loginWithGoogle, logout, baselines, updateBaselines, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

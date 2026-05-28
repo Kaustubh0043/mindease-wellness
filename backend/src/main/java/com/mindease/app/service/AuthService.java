@@ -94,6 +94,66 @@ public class AuthService {
                                 .build();
         }
 
+        @org.springframework.beans.factory.annotation.Value("${mindease.google.client-id}")
+        private String googleClientId;
+
+        public AuthResponse loginWithGoogle(com.mindease.app.dto.GoogleLoginRequest request) {
+                try {
+                        log.info("NEURAL HANDSHAKE: Initializing Google login verification");
+                        com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier verifier = 
+                            new com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier.Builder(
+                                new com.google.api.client.http.javanet.NetHttpTransport(), 
+                                com.google.api.client.json.gson.GsonFactory.getDefaultInstance()
+                            )
+                            .setAudience(java.util.Collections.singletonList(googleClientId))
+                            .build();
+
+                        com.google.api.client.googleapis.auth.oauth2.GoogleIdToken idToken = verifier.verify(request.getIdToken());
+                        if (idToken == null) {
+                                log.error("GOOGLE AUTH FAILED: Invalid token signature/audience");
+                                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "INVALID_GOOGLE_TOKEN");
+                        }
+
+                        com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload payload = idToken.getPayload();
+                        String email = payload.getEmail();
+                        String name = (String) payload.get("name");
+                        
+                        log.info("GOOGLE AUTH SUCCESSFUL for email: {}", email);
+
+                        User user = repository.findByEmail(email).orElse(null);
+                        if (user == null) {
+                                log.info("REGISTERING NEW GOOGLE USER: {}", email);
+                                Role userRole = email.endsWith("@admin.com") ? Role.ADMIN : Role.USER;
+                                // Create a random password for Google users since they login via Google OAuth
+                                String randomPassword = java.util.UUID.randomUUID().toString();
+                                user = User.builder()
+                                                .name(name != null ? name : "Google User")
+                                                .email(email)
+                                                .password(passwordEncoder.encode(randomPassword))
+                                                .role(userRole)
+                                                .build();
+                                user.setVerified(true); // Google emails are pre-verified
+                                repository.save(user);
+                        }
+
+                        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+                        var jwtToken = jwtService.generateToken(userDetails);
+
+                        return AuthResponse.builder()
+                                        .token(jwtToken)
+                                        .email(user.getEmail())
+                                        .name(user.getName())
+                                        .role(user.getRole().name())
+                                        .build();
+
+                } catch (ResponseStatusException e) {
+                        throw e;
+                } catch (Exception e) {
+                        log.error("GOOGLE AUTH ERROR: {}", e.getMessage(), e);
+                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Google authentication failed: " + e.getMessage());
+                }
+        }
+
         public AuthResponse verifyEmail(String email, String code) {
                 var user = repository.findByEmail(email)
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
