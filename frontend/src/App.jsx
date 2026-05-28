@@ -1,5 +1,16 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
 import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 import CustomCursor from './components/CustomCursor';
@@ -57,6 +68,7 @@ function App() {
     <AuthProvider>
       <CustomCursor />
       <Router>
+        <ScrollToTop />
         <LayoutWrapper>
           <Routes>
             <Route path="/login" element={<Login />} />
