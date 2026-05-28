@@ -81,4 +81,23 @@ public class UserController {
         User user = getCurrentUser(authentication);
         return ResponseEntity.ok(chatService.processMessage(user, payload.get("message")));
     }
+
+    @GetMapping("/user/profile")
+    public ResponseEntity<User> getProfile(Authentication authentication) {
+        User user = getCurrentUser(authentication);
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/user/profile")
+    public ResponseEntity<User> updateProfile(@RequestBody Map<String, String> payload, Authentication authentication) {
+        User user = getCurrentUser(authentication);
+        if (payload.containsKey("name")) {
+            user.setName(payload.get("name"));
+        }
+        if (payload.containsKey("profilePicture")) {
+            user.setProfilePicture(payload.get("profilePicture"));
+        }
+        userRepository.save(user);
+        return ResponseEntity.ok(user);
+    }
 }

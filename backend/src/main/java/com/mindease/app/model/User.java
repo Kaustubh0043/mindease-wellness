@@ -33,6 +33,9 @@ public class User {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String profilePicture;
+
     public User() {}
 
     public User(String name, String email, String password, Role role) {
@@ -60,6 +63,8 @@ public class User {
     public void setVerificationCode(String verificationCode) { this.verificationCode = verificationCode; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public String getProfilePicture() { return profilePicture; }
+    public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
 
     public static UserBuilder builder() {
         return new UserBuilder();

@@ -6,15 +6,17 @@ public class AuthResponse {
     private String email;
     private String role;
     private String createdAt;
+    private String profilePicture;
 
     public AuthResponse() {}
 
-    public AuthResponse(String token, String name, String email, String role, String createdAt) {
+    public AuthResponse(String token, String name, String email, String role, String createdAt, String profilePicture) {
         this.token = token;
         this.name = name;
         this.email = email;
         this.role = role;
         this.createdAt = createdAt;
+        this.profilePicture = profilePicture;
     }
 
     // Getters and Setters
@@ -28,6 +30,8 @@ public class AuthResponse {
     public void setRole(String role) { this.role = role; }
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public String getProfilePicture() { return profilePicture; }
+    public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
 
     public static AuthResponseBuilder builder() {
         return new AuthResponseBuilder();
@@ -39,14 +43,16 @@ public class AuthResponse {
         private String email;
         private String role;
         private String createdAt;
+        private String profilePicture;
 
         public AuthResponseBuilder token(String token) { this.token = token; return this; }
         public AuthResponseBuilder name(String name) { this.name = name; return this; }
         public AuthResponseBuilder email(String email) { this.email = email; return this; }
         public AuthResponseBuilder role(String role) { this.role = role; return this; }
         public AuthResponseBuilder createdAt(String createdAt) { this.createdAt = createdAt; return this; }
+        public AuthResponseBuilder profilePicture(String profilePicture) { this.profilePicture = profilePicture; return this; }
         public AuthResponse build() {
-            return new AuthResponse(token, name, email, role, createdAt);
+            return new AuthResponse(token, name, email, role, createdAt, profilePicture);
         }
     }
 }

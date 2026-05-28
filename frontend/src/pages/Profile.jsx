@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Shield, Trash2, Mail, Camera, AlertTriangle, X, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -7,7 +8,7 @@ const Profile = () => {
     const { user, updateUser, baselines } = useAuth();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [profilePic, setProfilePic] = useState(() => {
-        return localStorage.getItem(`profile_pic_${user?.email}`) || null;
+        return user?.profilePicture || localStorage.getItem(`profile_pic_${user?.email}`) || null;
     });
     const fileInputRef = useRef(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -23,38 +24,106 @@ const Profile = () => {
             return 'April 2026';
         }
     };
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            if (!user?.token) return;
+            try {
+                const config = { headers: { Authorization: `Bearer ${user.token}` } };
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/user/profile`, config);
+                const dbUser = res.data;
+                updateUser({ 
+                    name: dbUser.name, 
+                    email: dbUser.email, 
+                    profilePicture: dbUser.profilePicture, 
+                    createdAt: dbUser.createdAt 
+                });
+                setEditData({ name: dbUser.name, email: dbUser.email });
+                if (dbUser.profilePicture) {
+                    setProfilePic(dbUser.profilePicture);
+                }
+            } catch (err) {
+                console.error("Failed to load user profile", err);
+            }
+        };
+        fetchProfile();
+    }, [user?.token]);
     
-    const handleFileChange = (e) => {
+    const handleFileChange = async (e) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onloadend = () => {
+            reader.onloadend = async () => {
                 const base64Data = reader.result;
                 setProfilePic(base64Data);
                 localStorage.setItem(`profile_pic_${user?.email}`, base64Data);
+                
+                const token = user?.token;
+                if (token) {
+                    try {
+                        const config = { headers: { Authorization: `Bearer ${token}` } };
+                        await axios.put(`${import.meta.env.VITE_API_URL}/user/profile`, { 
+                            profilePicture: base64Data 
+                        }, config);
+                        updateUser({ profilePicture: base64Data });
+                    } catch (err) {
+                        console.error("Failed to persist profile picture to database", err);
+                    }
+                }
+                
                 alert("PROFILE PHOTO SAVED: Image persistent on current node.");
             };
             reader.readAsDataURL(file);
         }
     };
 
-    const handleRemovePhoto = () => {
+    const handleRemovePhoto = async () => {
         if (window.confirm("Wipe profile picture and return to default node?")) {
             setProfilePic(null);
             localStorage.removeItem(`profile_pic_${user?.email}`);
+            
+            const token = user?.token;
+            if (token) {
+                try {
+                    const config = { headers: { Authorization: `Bearer ${token}` } };
+                    await axios.put(`${import.meta.env.VITE_API_URL}/user/profile`, { 
+                        profilePicture: null 
+                    }, config);
+                    updateUser({ profilePicture: null });
+                } catch (err) {
+                    console.error("Failed to remove profile picture on database", err);
+                }
+            }
+            
             alert("PHOTO ERASED: Core identity face initialized to default vector.");
         }
     };
 
-    const handleSaveIdentity = () => {
-        const oldEmail = user?.email;
-        updateUser({ name: editData.name, email: editData.email });
-        if (profilePic && oldEmail !== editData.email) {
-            localStorage.setItem(`profile_pic_${editData.email}`, profilePic);
-            localStorage.removeItem(`profile_pic_${oldEmail}`);
+    const handleSaveIdentity = async () => {
+        try {
+            const token = user?.token;
+            if (!token) return;
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            
+            const res = await axios.put(`${import.meta.env.VITE_API_URL}/user/profile`, { 
+                name: editData.name, 
+                profilePicture: profilePic 
+            }, config);
+            
+            const dbUser = res.data;
+            
+            updateUser({ 
+                name: dbUser.name, 
+                email: dbUser.email, 
+                profilePicture: dbUser.profilePicture 
+            });
+            
+            alert('IDENTITY RECALIBRATED: Core data synchronized.');
+            setIsEditing(false);
+        } catch (err) {
+            console.error("Failed to update profile", err);
+            alert("Failed to sync identity changes to backend.");
         }
-        alert('IDENTITY RECALIBRATED: Core data synchronized.');
-        setIsEditing(false);
     };
 
     return (
