@@ -40,6 +40,7 @@ const UserDashboard = () => {
     const [aiInsight, setAiInsight] = useState('SCANNING NEURAL GRID...');
     const [systemStats, setSystemStats] = useState({ totalIdentities: 0, systemStatus: 'INITIALIZING...' });
     const [isPlaying, setIsPlaying] = useState(false);
+    const [journalCount, setJournalCount] = useState(0);
 
     useEffect(() => {
         if (user) {
@@ -66,9 +67,21 @@ const UserDashboard = () => {
                     console.error("Pulse Failed", e);
                 }
             };
+
+            const getJournalCount = async () => {
+                try {
+                    const token = JSON.parse(localStorage.getItem('user'))?.token;
+                    const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+                    const res = await axios.get(`${import.meta.env.VITE_API_URL}/journal`, config);
+                    setJournalCount(res.data.length);
+                } catch (e) {
+                    console.error("Failed to fetch journals", e);
+                }
+            };
             
             getAIInsight();
             getSystemStats();
+            getJournalCount();
 
             // Show modal if energy is the default 88 (simulating uncalibrated)
             if (!baselines.calibrationComplete) {
@@ -277,7 +290,7 @@ const UserDashboard = () => {
 
                     <div className="luxury-card span-small">
                         <MessageSquare className="card-icon" size={32} />
-                        <div><div className="card-title">Active Journals</div><div className="card-value">12</div></div>
+                        <div><div className="card-title">Active Journals</div><div className="card-value">{journalCount}</div></div>
                     </div>
 
                     <div className="luxury-card span-small" style={{ background: 'rgba(139, 92, 246, 0.05)' }}>
