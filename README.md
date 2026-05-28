@@ -40,6 +40,8 @@ A centralized hub where students can access resources, documentation, and create
 - **Procedural Audio**: Real-time breathing guidance synthesized via the Web Audio API.
 - **AI Insights**: Dynamic, personalized wellness insights powered by neural mapping (Groq API).
 - **Institutional Overwatch**: A counselor-first portal for monitoring campus-wide wellness trends.
+- **Persistent User Profile Configuration**: Real-time DB synchronization of custom user names and photo avatars. Image uploads are automatically compressed on the client-side (to ~40KB) via HTML5 Canvas before database write to optimize loading times.
+- **Dynamic Session Metrics & API Safety**: Blocks dashboard AI calls and hides baseline stats until the calibration test is completed, safeguarding system integrity and API consumption.
 - **Glassmorphic Design System**: Custom Vanilla CSS with deep blurs, animated borders, and modern typography.
 
 ---
