@@ -14,12 +14,18 @@ const Documentation = () => {
     const [loading, setLoading] = React.useState(false);
 
     const handleCreateTicket = async () => {
+        if (!user) {
+            alert('AUTHENTICATION REQUIRED: Please login or register to open an official support ticket.');
+            return;
+        }
         setLoading(true);
         try {
             await axios.post(`${import.meta.env.VITE_API_URL}/support/create`, {
-                studentName: user?.name || 'Anonymous Student',
-                studentEmail: user?.email || 'unlinked@mindease.com',
+                studentName: user.name,
+                studentEmail: user.email,
                 message: 'STUDENT REQUEST: User requested institutional support from the Wellness Hub.',
+            }, {
+                headers: { Authorization: `Bearer ${user.token}` }
             });
             alert('SUPPORT CHANNEL INITIALIZED: A counselor has been notified of your request.');
         } catch (e) {
