@@ -15,7 +15,7 @@ const Calibration = () => {
             title: 'Neural Energy',
             question: 'How would you describe your current cognitive drive?',
             options: [
-                { label: 'HIGH VIBRATION', desc: 'Alert, focused, ready for complexity.', value: 90 },
+                { label: 'HIGH VIBRATION', desc: 'Alert, focused, ready for complexity.', value: 100 },
                 { label: 'STEADY RESONANCE', desc: 'Functional, balanced, stable.', value: 70 },
                 { label: 'LOW FREQUENCY', desc: 'Foggy, requiring recalibration.', value: 40 }
             ],
@@ -26,7 +26,7 @@ const Calibration = () => {
             title: 'Emotional Baseline',
             question: 'How resilient has your emotional state been lately?',
             options: [
-                { label: 'IRONCLAD', desc: 'Unshakable focus and calm.', value: 95 },
+                { label: 'IRONCLAD', desc: 'Unshakable focus and calm.', value: 100 },
                 { label: 'FLUID', desc: 'Responsive to environment.', value: 65 },
                 { label: 'VOLATILE', desc: 'Frequent shifts in resonance.', value: 30 }
             ],
@@ -37,7 +37,7 @@ const Calibration = () => {
             title: 'Restorative Cycle',
             question: 'Rate the quality of your recent sleep cycles.',
             options: [
-                { label: 'DEEP REM', desc: 'Waking up fully restored.', value: 90 },
+                { label: 'DEEP REM', desc: 'Waking up fully restored.', value: 100 },
                 { label: 'INTERRUPTED', desc: 'Sleep is light or inconsistent.', value: 55 },
                 { label: 'DEPLETED', desc: 'Chronic lack of restorative rest.', value: 25 }
             ],
@@ -48,7 +48,7 @@ const Calibration = () => {
             title: 'Social Battery',
             question: 'How does social interaction affect your energy?',
             options: [
-                { label: 'AMPLIFIED', desc: 'Connection fuels my resonance.', value: 85 },
+                { label: 'AMPLIFIED', desc: 'Connection fuels my resonance.', value: 100 },
                 { label: 'NEUTRAL', desc: 'I balance solitude and connection.', value: 60 },
                 { label: 'DRAINING', desc: 'Currently requiring isolation.', value: 30 }
             ],
@@ -59,7 +59,7 @@ const Calibration = () => {
             title: 'Physical Resonance',
             question: 'How connected do you feel to your physical body?',
             options: [
-                { label: 'SYNCHRONIZED', desc: 'Vitality is high and stable.', value: 90 },
+                { label: 'SYNCHRONIZED', desc: 'Vitality is high and stable.', value: 100 },
                 { label: 'MODERATE', desc: 'Occasional fatigue or tension.', value: 60 },
                 { label: 'DISCORDANT', desc: 'Feeling physically disconnected.', value: 25 }
             ],
@@ -70,7 +70,7 @@ const Calibration = () => {
             title: 'Environmental Load',
             question: 'Rate the current weight of external responsibilities.',
             options: [
-                { label: 'WEIGHTLESS', desc: 'Managing tasks with ease.', value: 95 },
+                { label: 'WEIGHTLESS', desc: 'Managing tasks with ease.', value: 100 },
                 { label: 'HEAVY', desc: 'Managing, but feeling the load.', value: 50 },
                 { label: 'CRITICAL', desc: 'Overwhelmed by external pressure.', value: 15 }
             ],
@@ -81,7 +81,7 @@ const Calibration = () => {
             title: 'Creative Output',
             question: 'How vibrant is your "Inner Vision" right now?',
             options: [
-                { label: 'LUCID', desc: 'Ideas are flowing effortlessly.', value: 90 },
+                { label: 'LUCID', desc: 'Ideas are flowing effortlessly.', value: 100 },
                 { label: 'STAGNANT', desc: 'Waiting for a creative wave.', value: 50 },
                 { label: 'BLOCKED', desc: 'Vision feels foggy or absent.', value: 20 }
             ],
@@ -92,7 +92,7 @@ const Calibration = () => {
             title: 'Future Frequency',
             question: 'How optimistic is your current trajectory?',
             options: [
-                { label: 'EXPANSIVE', desc: 'Seeing massive potential ahead.', value: 95 },
+                { label: 'EXPANSIVE', desc: 'Seeing massive potential ahead.', value: 100 },
                 { label: 'LINEAR', desc: 'Moving forward steadily.', value: 65 },
                 { label: 'UNCERTAIN', desc: 'Frequency feels cautious.', value: 35 }
             ],
