@@ -4,8 +4,23 @@ const CustomCursor = () => {
     const mainCursor = useRef(null);
     const secondaryCursor = useRef(null);
     const [isClicked, setIsClicked] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
+        const checkDevice = () => {
+            const hasTouch = window.matchMedia('(pointer: coarse)').matches;
+            const isSmallScreen = window.innerWidth <= 1024;
+            setIsMobile(hasTouch && isSmallScreen);
+        };
+
+        checkDevice();
+        window.addEventListener('resize', checkDevice);
+        return () => window.removeEventListener('resize', checkDevice);
+    }, []);
+
+    useEffect(() => {
+        if (isMobile) return;
+
         const onMouseMove = (e) => {
             const { clientX, clientY } = e;
             if (mainCursor.current) {
@@ -19,7 +34,6 @@ const CustomCursor = () => {
         const onMouseDown = () => setIsClicked(true);
         const onMouseUp = () => setIsClicked(false);
 
-        // Track on window to catch every single pixel
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mousedown', onMouseDown);
         window.addEventListener('mouseup', onMouseUp);
@@ -29,7 +43,9 @@ const CustomCursor = () => {
             window.removeEventListener('mousedown', onMouseDown);
             window.removeEventListener('mouseup', onMouseUp);
         };
-    }, []);
+    }, [isMobile]);
+
+    if (isMobile) return null;
 
     return (
         <>
@@ -80,8 +96,10 @@ const CustomCursor = () => {
                     height: 48px;
                     border-color: #f97316;
                 }
-                html, body, * {
-                    cursor: none !important;
+                @media (pointer: fine) {
+                    html, body, * {
+                        cursor: none !important;
+                    }
                 }
             `}</style>
         </>
