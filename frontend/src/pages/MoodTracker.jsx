@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Activity, Sparkles, Heart, Zap, Brain, Shield, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useAudioMixer } from '../context/AudioContext';
+import axios from 'axios';
 
 const MoodTracker = () => {
     const { updateBaselines, baselines } = useAuth();
@@ -10,7 +11,7 @@ const MoodTracker = () => {
     const [selectedMood, setSelectedMood] = useState(null);
     const [intensity, setIntensity] = useState(50);
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // Direct mapping for a more reactive experience
         const newEnergy = parseInt(intensity);
         let stabilityLabel = 'Stable';
@@ -23,6 +24,33 @@ const MoodTracker = () => {
             energy: newEnergy,
             stability: stabilityLabel
         });
+        
+        // Post mood record to database
+        try {
+            const token = JSON.parse(localStorage.getItem('user'))?.token;
+            const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+            
+            // Map selectedMood to valid backend MoodType (HAPPY, SAD, STRESSED, ANXIOUS)
+            let backendMood = 'HAPPY';
+            if (selectedMood === 'muted') {
+                backendMood = 'SAD';
+            } else if (selectedMood === 'stable') {
+                backendMood = 'HAPPY';
+            } else if (selectedMood === 'resonant') {
+                backendMood = 'HAPPY';
+            } else if (selectedMood === 'vibrant') {
+                backendMood = 'HAPPY';
+            }
+            
+            await axios.post(`${import.meta.env.VITE_API_URL}/moods`, {
+                mood: backendMood,
+                note: `Sensory Mapping: logged resonance intensity of ${newEnergy}% (${selectedMood.toUpperCase()}).`,
+                intensity: Math.round(newEnergy / 10),
+                date: new Date().toISOString().split('T')[0]
+            }, config);
+        } catch (e) {
+            console.error("Failed to post mood from tracker", e);
+        }
         
         // Stop active ambient streams
         stopAll();

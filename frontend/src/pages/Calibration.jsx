@@ -125,7 +125,7 @@ const Calibration = () => {
                 try {
                     // Beam data to the Master Database
                     await axios.post(`${import.meta.env.VITE_API_URL}/moods`, {
-                        mood: stabilityLabel.toUpperCase() === 'OPTIMAL' ? 'HAPPY' : (stabilityLabel.toUpperCase() === 'STABLE' ? 'NEUTRAL' : 'STRESS'),
+                        mood: stabilityLabel.toUpperCase() === 'OPTIMAL' ? 'HAPPY' : (stabilityLabel.toUpperCase() === 'STABLE' ? 'HAPPY' : 'STRESSED'),
                         note: `Neural Calibration Complete: ${avgEnergy}% Energy detected.`,
                         intensity: Math.round(avgEnergy / 10),
                         date: new Date().toISOString().split('T')[0] // Required by backend
