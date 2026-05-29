@@ -266,6 +266,9 @@ const Profile = () => {
                         font-size: 3rem;
                         margin-bottom: 2rem;
                     }
+                    .content-area {
+                        padding: 2rem 0 !important;
+                    }
                 }
             `}</style>
 

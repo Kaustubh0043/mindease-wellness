@@ -219,6 +219,22 @@ const SupportCenter = () => {
                 .glass-panel:hover {
                     border-color: rgba(139, 92, 246, 0.25);
                 }
+                .outreach-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1.2fr;
+                    gap: 3.5rem;
+                    margin-top: 2.5rem;
+                }
+                @media (max-width: 900px) {
+                    .glass-panel {
+                        padding: 2rem 1.25rem;
+                        border-radius: 2rem;
+                    }
+                    .outreach-grid {
+                        grid-template-columns: 1fr;
+                        gap: 2.5rem;
+                    }
+                }
                 .panel-title {
                     font-family: 'Playfair Display', serif;
                     font-size: 1.8rem;
@@ -723,7 +739,7 @@ const SupportCenter = () => {
                     Need personal counseling? Submit a confidential request. A mental health counselor from the university wellness department will reach out directly. You can monitor request statuses below.
                 </p>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '3.5rem', marginTop: '2.5rem' }}>
+                <div className="outreach-grid">
                     {/* Submission Form */}
                     <form onSubmit={handleTicketSubmit} className="ticket-form">
                         <div className="form-group">

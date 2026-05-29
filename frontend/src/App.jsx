@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -14,6 +14,7 @@ const ScrollToTop = () => {
 import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 import CustomCursor from './components/CustomCursor';
+import BrandLoader from './components/BrandLoader';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import UserDashboard from './pages/UserDashboard';
@@ -57,8 +58,15 @@ const LayoutWrapper = ({ children }) => {
 };
 
 function App() {
+  const [showLoader, setShowLoader] = useState(() => {
+    return !sessionStorage.getItem('loaderPlayed');
+  });
+
   return (
     <AuthProvider>
+      {showLoader && (
+        <BrandLoader onComplete={() => setShowLoader(false)} />
+      )}
       <CustomCursor />
       <Router>
         <ScrollToTop />

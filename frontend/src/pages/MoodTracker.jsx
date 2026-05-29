@@ -105,6 +105,23 @@ const MoodTracker = () => {
                     box-shadow: 0 0 40px rgba(139, 92, 246, 0.4);
                     letter-spacing: 8px;
                 }
+                @media (max-width: 900px) {
+                    .content-area {
+                        padding: 2rem 0 !important;
+                    }
+                    .sensor-grid {
+                        grid-template-columns: 1fr;
+                        gap: 1.5rem;
+                        margin-top: 2rem;
+                    }
+                    .massive-title {
+                        font-size: 3rem;
+                        margin-bottom: 2rem;
+                    }
+                    .intensity-slider {
+                        margin-top: 3rem;
+                    }
+                }
             `}</style>
 
             <div className="liquid-bg" />

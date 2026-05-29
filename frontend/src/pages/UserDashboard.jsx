@@ -241,6 +241,9 @@ const UserDashboard = () => {
                     .welcome-header {
                         margin-bottom: 4rem;
                     }
+                    .dashboard-content {
+                        padding: 2rem 0 !important;
+                    }
                 }
             `}</style>
 
@@ -308,7 +311,7 @@ const UserDashboard = () => {
                         <div style={{ height: '100%', padding: '4rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', position: 'relative', zIndex: 5 }}>
                             <div className="card-title">Neural Revelation</div>
                             <blockquote style={{ flex: 1, display: 'flex', alignItems: 'center', margin: 0 }}>
-                                <p style={{ fontFamily: 'Playfair Display', fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontStyle: 'italic', lineHeight: '1.5', margin: 0 }}>"{aiInsight}"</p>
+                                <p style={{ fontFamily: 'Playfair Display', fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontStyle: 'italic', lineHeight: '1.5', margin: 0 }}>"{aiInsight ? aiInsight.replace(/\*\*/g, '').trim() : ''}"</p>
                             </blockquote>
                             <div style={{ marginTop: '3rem', fontSize: '0.8rem', color: '#475569', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                 <div style={{ width: '40px', height: '1px', background: '#475569' }}></div> AI SYNTHESIS COMPLETE
