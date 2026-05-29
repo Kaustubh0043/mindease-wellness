@@ -24,7 +24,9 @@ const Chatbot = () => {
     };
 
     useEffect(() => {
-        scrollToBottom();
+        if (messages.length > 1 || isTyping) {
+            scrollToBottom();
+        }
     }, [messages, isTyping]);
 
     const handleSend = async (e) => {
@@ -250,6 +252,50 @@ const Chatbot = () => {
                     background: rgba(139, 92, 246, 0.05);
                     border-color: rgba(139, 92, 246, 0.2);
                     color: white;
+                }
+
+                @media (max-width: 900px) {
+                    .companion-space {
+                        padding-top: 1rem;
+                        padding-bottom: 2rem;
+                    }
+                    .section-title {
+                        font-size: 2.25rem;
+                    }
+                    .chat-container {
+                        border-radius: 2rem;
+                        height: 70vh;
+                    }
+                    .privacy-alert {
+                        padding: 1rem 1.5rem;
+                    }
+                    .chat-header {
+                        padding: 1rem 1.5rem;
+                    }
+                    .chat-body {
+                        padding: 1.5rem;
+                        gap: 1rem;
+                    }
+                    .bubble {
+                        max-width: 85%;
+                        padding: 1rem 1.25rem;
+                        font-size: 0.95rem;
+                    }
+                    .chat-footer {
+                        padding: 1.25rem 1.5rem;
+                    }
+                    .chat-input {
+                        padding: 1rem 1.25rem;
+                        font-size: 0.95rem;
+                    }
+                    .send-btn {
+                        width: 48px;
+                        height: 48px;
+                    }
+                    .quick-btn {
+                        padding: 0.5rem 1rem;
+                        font-size: 0.75rem;
+                    }
                 }
             `}</style>
 

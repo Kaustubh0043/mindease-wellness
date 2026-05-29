@@ -264,6 +264,18 @@ const UserDashboard = () => {
                     .dashboard-content {
                         padding: 2rem 0 !important;
                     }
+                    .revelation-inner {
+                        padding: 2.5rem 1.25rem 2rem !important;
+                    }
+                }
+                .revelation-inner {
+                    height: 100%;
+                    padding: 4rem;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    position: relative;
+                    z-index: 5;
                 }
             `}</style>
 
@@ -328,7 +340,7 @@ const UserDashboard = () => {
 
                     <div className="luxury-card span-wide" style={{ gridRow: 'span 2', padding: '0', overflow: 'hidden' }}>
                         <div style={{ position: 'absolute', top: '2rem', right: '2rem', background: '#8b5cf6', padding: '1rem', borderRadius: '50%', zIndex: 10 }}><Sparkles size={24} color="white" /></div>
-                        <div style={{ height: '100%', padding: '4rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', position: 'relative', zIndex: 5 }}>
+                        <div className="revelation-inner">
                             <div className="card-title">Neural Revelation</div>
                             <blockquote style={{ flex: 1, display: 'flex', alignItems: 'center', margin: 0 }}>
                                 <p style={{ fontFamily: 'Playfair Display', fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontStyle: 'italic', lineHeight: '1.5', margin: 0 }}>"{aiInsight ? aiInsight.replace(/\*\*/g, '').trim() : ''}"</p>

@@ -206,21 +206,21 @@ h1, h2, h3, .logo {
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: #3b82f6; /* Vibrant premium blue */
+  background: #8b5cf6; /* Vibrant premium purple */
   border: 2.5px solid #ffffff; /* Clear white outline */
   border-radius: 8px;
   cursor: pointer;
   color: white;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
   padding: 0;
   z-index: 1100;
 }
 
 .menu-toggle-btn:hover {
-  background: #2563eb;
+  background: #7c3aed;
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.6);
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.6);
 }
 
 .menu-toggle-btn:active {
