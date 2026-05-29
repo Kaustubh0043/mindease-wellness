@@ -123,3 +123,53 @@ export const generateChatResponse = async (chatHistory, userName) => {
         return "My connection was briefly interrupted. Take a slow, deep breath. I am still here with you.";
     }
 };
+
+export const analyzeJournalSentiment = async (journalContent, userName) => {
+    if (!GROQ_API_KEY) {
+        return {
+            sentiment: "REFLECTIVE",
+            reframing: "AI calibration is offline, but keep writing - venting is powerful cognitive medicine! 💜",
+            distortions: []
+        };
+    }
+
+    const prompt = `
+        You are an AI cognitive therapist at the MindEase Wellness Center.
+        Student: ${userName}
+        Reflection Content: "${journalContent}"
+        
+        Analyze this reflection and return a JSON object with:
+        1. "sentiment": A single-word mood/sentiment of the entry (e.g. STRESSED, REFLECTIVE, HOPEFUL, APPREHENSIVE, GRATEFUL, LONELY).
+        2. "distortions": A JSON array of cognitive distortions identified (e.g., Catastrophizing, Overgeneralization, Black-and-White Thinking, Mind Reading, Emotional Reasoning, Should Statements). Limit to maximum 2, or empty if none are obvious.
+        3. "reframing": A comforting, therapeutic, 2-sentence cognitive reframe or perspective shift that validates their feeling and invites a constructive outlook.
+        
+        Format the response strictly as valid raw JSON containing only keys "sentiment", "distortions", and "reframing". Do not wrap it in markdown codeblocks.
+    `;
+
+    try {
+        const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+            model: "llama-3.1-8b-instant",
+            messages: [
+                { role: "system", content: "You are a cognitive behavioral therapy assistant. You only output valid raw JSON." },
+                { role: "user", content: prompt }
+            ],
+            response_format: { type: "json_object" },
+            temperature: 0.5,
+            max_tokens: 150
+        }, {
+            headers: {
+                'Authorization': `Bearer ${GROQ_API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return JSON.parse(response.data.choices[0].message.content);
+    } catch (error) {
+        console.error('GROQ JOURNAL ANALYSIS FAILED:', error);
+        return {
+            sentiment: "REFLECTIVE",
+            reframing: "Your thoughts are captured safely. Take a deep breath and give yourself credit for reflecting today. 💜",
+            distortions: []
+        };
+    }
+};

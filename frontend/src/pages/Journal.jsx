@@ -1,17 +1,23 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { MessageSquare, Save, History, BookOpen, ArrowRight, Loader2 } from 'lucide-react';
+import { MessageSquare, Save, History, BookOpen, ArrowRight, Loader2, Sparkles, Brain, AlertCircle, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import { useAudioMixer } from '../context/AudioContext';
+import { analyzeJournalSentiment } from '../services/aiService';
 
 const Journal = () => {
     const { user } = useAuth();
+    const { stopAll } = useAudioMixer();
     const [entry, setEntry] = useState('');
     const [title, setTitle] = useState('');
     const [pastEntries, setPastEntries] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [analysisResult, setAnalysisResult] = useState(null);
+    const [showAnalysisModal, setShowAnalysisModal] = useState(false);
 
     const fetchEntries = async () => {
         if (!user) return;
@@ -44,21 +50,27 @@ const Journal = () => {
                 : `Untitled Reflection\n\n${entry.trim()}`;
                 
             await axios.post(`${import.meta.env.VITE_API_URL}/journal`, { content: combinedContent }, config);
+            
+            // Stop active ambient streams
+            stopAll();
+
+            // Trigger AI analysis
+            setIsAnalyzing(true);
+            const targetText = entry.trim();
+            const analysis = await analyzeJournalSentiment(targetText, user.name || 'Student');
+            setAnalysisResult(analysis);
+            
             setTitle('');
             setEntry('');
-            
-            const audio = document.getElementById('neural-audio-driver');
-            if (audio) {
-                audio.pause();
-            }
-
-            alert("REFLECTION ARCHIVED: Thoughts safely encrypted and synchronized.");
+            setIsAnalyzing(false);
+            setShowAnalysisModal(true);
             fetchEntries();
         } catch (error) {
             console.error("Failed to save journal", error);
             alert("HANDSHAKE FAILED: Unable to commit reflection to database.");
         } finally {
             setIsSaving(false);
+            setIsAnalyzing(false);
         }
     };
 
@@ -119,6 +131,53 @@ const Journal = () => {
                     letter-spacing: 8px;
                 }
 
+                /* Glassmorphic Cognitive synthesis modal */
+                .modal-overlay {
+                    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+                    background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(20px);
+                    display: flex; align-items: center; justify-content: center;
+                    z-index: 10000; padding: 2rem;
+                }
+                .luxury-modal {
+                    background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(139, 92, 246, 0.2);
+                    box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 50px rgba(139, 92, 246, 0.1);
+                    border-radius: 3rem; padding: 4rem; width: 100%; max-width: 650px;
+                    position: relative; backdrop-filter: blur(30px);
+                }
+                .modal-close-btn {
+                    position: absolute; top: 2.5rem; right: 2.5rem;
+                    background: none; border: none; color: #64748b; cursor: pointer; transition: 0.3s;
+                }
+                .modal-close-btn:hover { color: white; transform: scale(1.1); }
+                .modal-headline { font-family: 'Outfit'; font-weight: 800; font-size: 1.1rem; letter-spacing: 5px; margin: 0; color: white; }
+                
+                .modal-sentiment-badge {
+                    background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2);
+                    color: #cbd5e1; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px;
+                    padding: 1rem 1.5rem; border-radius: 1.5rem; display: inline-block; margin-bottom: 2rem;
+                    margin-top: 1.5rem;
+                }
+                .modal-section-title { font-size: 0.65rem; font-weight: 800; color: #64748b; letter-spacing: 3px; text-transform: uppercase; }
+                .distortion-badge {
+                    background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2);
+                    color: #f87171; font-size: 0.65rem; font-weight: 800; letter-spacing: 1px;
+                    padding: 0.5rem 1rem; border-radius: 1rem; display: flex; align-items: center; gap: 0.5rem;
+                }
+                .modal-reframe-text {
+                    font-family: 'Playfair Display', serif; font-size: 1.6rem; line-height: 1.6;
+                    color: #e2e8f0; margin-top: 1rem; font-style: italic;
+                }
+                .modal-action-btn {
+                    background: #8b5cf6; color: white; border: none; width: 100%;
+                    padding: 1.5rem 0; border-radius: 1.5rem; font-weight: 800;
+                    letter-spacing: 4px; font-size: 0.75rem; cursor: pointer;
+                    box-shadow: 0 0 30px rgba(139, 92, 246, 0.3); transition: 0.4s;
+                }
+                .modal-action-btn:hover {
+                    background: #a855f7; box-shadow: 0 0 45px rgba(168, 85, 247, 0.5);
+                    letter-spacing: 5px;
+                }
+
                 @media (max-width: 900px) {
                     .journal-interface {
                         grid-template-columns: 1fr;
@@ -140,6 +199,17 @@ const Journal = () => {
                     .massive-title {
                         font-size: 3rem;
                         margin-bottom: 2rem;
+                    }
+                    .luxury-modal {
+                        padding: 2.5rem 2rem;
+                        border-radius: 2rem;
+                    }
+                    .modal-close-btn {
+                        top: 1.5rem;
+                        right: 1.5rem;
+                    }
+                    .modal-reframe-text {
+                        font-size: 1.25rem;
                     }
                 }
             `}</style>
@@ -168,10 +238,10 @@ const Journal = () => {
                             <button 
                                 className="ghost-btn" 
                                 onClick={handleSave}
-                                disabled={isSaving || !entry.trim()}
+                                disabled={isSaving || isAnalyzing || !entry.trim()}
                             >
-                                {isSaving ? "SYNCHRONIZING..." : "SAVE ARCHIVE"} 
-                                {isSaving ? <Loader2 className="spin" size={16} /> : <Save size={16} />}
+                                {isAnalyzing ? "COGNITIVE SYNTHESIS..." : (isSaving ? "SAVING ARCHIVE..." : "SAVE ARCHIVE")} 
+                                {(isSaving || isAnalyzing) ? <Loader2 className="spin" style={{ animation: 'spin 1s linear infinite' }} size={16} /> : <Save size={16} />}
                             </button>
                         </div>
 
@@ -217,6 +287,56 @@ const Journal = () => {
                     </div>
                 </motion.div>
             </div>
+
+            <AnimatePresence>
+                {showAnalysisModal && analysisResult && (
+                    <div className="modal-overlay">
+                        <motion.div 
+                            initial={{ scale: 0.9, y: 20, opacity: 0 }}
+                            animate={{ scale: 1, y: 0, opacity: 1 }}
+                            exit={{ scale: 0.9, y: 20, opacity: 0 }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+                            className="luxury-modal"
+                        >
+                            <button className="modal-close-btn" onClick={() => setShowAnalysisModal(false)}>
+                                <X size={20} />
+                            </button>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                                <Brain style={{ color: '#8b5cf6' }} size={28} />
+                                <h3 className="modal-headline">COGNITIVE RESONANCE</h3>
+                            </div>
+                            
+                            <div className="modal-sentiment-badge">
+                                SENTIMENT FREQUENCY: <span style={{ color: '#c084fc', fontWeight: 900 }}>{analysisResult.sentiment}</span>
+                            </div>
+
+                            {analysisResult.distortions && analysisResult.distortions.length > 0 && (
+                                <div style={{ marginBottom: '1.5rem' }}>
+                                    <div className="modal-section-title">DETECTED COGNITIVE DISTORTIONS</div>
+                                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                                        {analysisResult.distortions.map((dist, idx) => (
+                                            <span key={idx} className="distortion-badge">
+                                                <AlertCircle size={12} /> {dist}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            <div style={{ marginBottom: '2.5rem' }}>
+                                <div className="modal-section-title">THERAPEUTIC REFRAME</div>
+                                <p className="modal-reframe-text">
+                                    "{analysisResult.reframing}"
+                                </p>
+                            </div>
+
+                            <button className="modal-action-btn" onClick={() => setShowAnalysisModal(false)}>
+                                ACKNOWLEDGE & CALIBRATE
+                            </button>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

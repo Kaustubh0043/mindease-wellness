@@ -256,36 +256,37 @@ const Chatbot = () => {
 
                 @media (max-width: 900px) {
                     .companion-space {
-                        padding-top: 1rem;
-                        padding-bottom: 2rem;
+                        padding-top: 0.5rem;
+                        padding-bottom: 1.5rem;
                     }
                     .section-title {
                         font-size: 2.25rem;
                     }
                     .chat-container {
                         border-radius: 2rem;
-                        height: 70vh;
+                        height: 80vh; /* Taller viewport container */
                     }
                     .privacy-alert {
-                        padding: 1rem 1.5rem;
+                        padding: 0.75rem 1rem;
                     }
                     .chat-header {
-                        padding: 1rem 1.5rem;
+                        padding: 0.75rem 1rem;
                     }
                     .chat-body {
-                        padding: 1.5rem;
-                        gap: 1rem;
+                        padding: 1.25rem 1rem;
+                        gap: 0.75rem;
                     }
                     .bubble {
-                        max-width: 85%;
-                        padding: 1rem 1.25rem;
+                        max-width: 95%; /* Broader bubbles for easier reading */
+                        padding: 0.85rem 1.1rem;
                         font-size: 0.95rem;
+                        line-height: 1.5;
                     }
                     .chat-footer {
-                        padding: 1.25rem 1.5rem;
+                        padding: 1rem 1rem;
                     }
                     .chat-input {
-                        padding: 1rem 1.25rem;
+                        padding: 0.85rem 1.1rem;
                         font-size: 0.95rem;
                     }
                     .send-btn {

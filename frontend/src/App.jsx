@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { AudioMixerProvider } from './context/AudioContext';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -64,70 +65,71 @@ function App() {
 
   return (
     <AuthProvider>
-      {showLoader && (
-        <BrandLoader onComplete={() => setShowLoader(false)} />
-      )}
-      <CustomCursor />
-      <audio id="neural-audio-driver" loop crossOrigin="anonymous" />
-      <Router>
-        <ScrollToTop />
-        <LayoutWrapper>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            
-            {/* User Routes */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute role="USER">
-                <UserDashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/mood-tracker" element={
-              <ProtectedRoute role="USER">
-                <MoodTracker />
-              </ProtectedRoute>
-            } />
-            <Route path="/journal" element={
-              <ProtectedRoute role="USER">
-                <Journal />
-              </ProtectedRoute>
-            } />
-            <Route path="/profile" element={
-              <ProtectedRoute role="USER">
-                <Profile />
-              </ProtectedRoute>
-            } />
-            <Route path="/support" element={
-              <ProtectedRoute role="USER">
-                <SupportCenter />
-              </ProtectedRoute>
-            } />
-            <Route path="/chat" element={
-              <ProtectedRoute role="USER">
-                <Chatbot />
-              </ProtectedRoute>
-            } />
-            <Route path="/calibration" element={
-              <ProtectedRoute role="USER">
-                <Calibration />
-              </ProtectedRoute>
-            } />
+      <AudioMixerProvider>
+        {showLoader && (
+          <BrandLoader onComplete={() => setShowLoader(false)} />
+        )}
+        <CustomCursor />
+        <Router>
+          <ScrollToTop />
+          <LayoutWrapper>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              
+              {/* User Routes */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute role="USER">
+                  <UserDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/mood-tracker" element={
+                <ProtectedRoute role="USER">
+                  <MoodTracker />
+                </ProtectedRoute>
+              } />
+              <Route path="/journal" element={
+                <ProtectedRoute role="USER">
+                  <Journal />
+                </ProtectedRoute>
+              } />
+              <Route path="/profile" element={
+                <ProtectedRoute role="USER">
+                  <Profile />
+                </ProtectedRoute>
+              } />
+              <Route path="/support" element={
+                <ProtectedRoute role="USER">
+                  <SupportCenter />
+                </ProtectedRoute>
+              } />
+              <Route path="/chat" element={
+                <ProtectedRoute role="USER">
+                  <Chatbot />
+                </ProtectedRoute>
+              } />
+              <Route path="/calibration" element={
+                <ProtectedRoute role="USER">
+                  <Calibration />
+                </ProtectedRoute>
+              } />
 
-            <Route path="/admin" element={
-              <ProtectedRoute role="ADMIN">
-                <AdminDashboard />
-              </ProtectedRoute>
-            } />
+              <Route path="/admin" element={
+                <ProtectedRoute role="ADMIN">
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
 
-            <Route path="/about" element={<AboutUs />} />
-            <Route path="/docs" element={<Documentation />} />
-            <Route path="/pulse" element={<NeuralPulse />} />
-            <Route path="/counselor" element={<CounselorDashboard />} />
+              <Route path="/about" element={<AboutUs />} />
+              <Route path="/docs" element={<Documentation />} />
+              <Route path="/pulse" element={<NeuralPulse />} />
+              <Route path="/counselor" element={<CounselorDashboard />} />
 
-            <Route path="/" element={<Navigate to="/login" />} />
-          </Routes>
-        </LayoutWrapper>
-      </Router>
+              <Route path="/" element={<Navigate to="/login" />} />
+            </Routes>
+          </LayoutWrapper>
+        </Router>
+      </AudioMixerProvider>
     </AuthProvider>
   );
 }

@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Activity, Sparkles, Heart, Zap, Brain, Shield, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useAudioMixer } from '../context/AudioContext';
 
 const MoodTracker = () => {
     const { updateBaselines, baselines } = useAuth();
+    const { stopAll } = useAudioMixer();
     const [selectedMood, setSelectedMood] = useState(null);
     const [intensity, setIntensity] = useState(50);
 
@@ -22,10 +24,8 @@ const MoodTracker = () => {
             stability: stabilityLabel
         });
         
-        const audio = document.getElementById('neural-audio-driver');
-        if (audio) {
-            audio.pause();
-        }
+        // Stop active ambient streams
+        stopAll();
         
         alert(`NEURAL FREQUENCY LOGGED: Resonance set to ${newEnergy}% (${stabilityLabel}).`);
     };

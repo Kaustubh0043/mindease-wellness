@@ -99,6 +99,40 @@ const NeuralPulse = () => {
         return '#10b981';
     };
 
+    // Concentric ripple configuration generator
+    const getRippleVariants = (delay) => ({
+        Inhale: {
+            scale: [1, 2.4],
+            opacity: [0.5, 0],
+            transition: {
+                duration: 4,
+                ease: "easeOut",
+                repeat: Infinity,
+                delay
+            }
+        },
+        Hold: {
+            scale: [2.2, 2.3, 2.2],
+            opacity: [0.15, 0.25, 0.15],
+            transition: {
+                duration: 3,
+                ease: "easeInOut",
+                repeat: Infinity,
+                delay
+            }
+        },
+        Exhale: {
+            scale: [2.2, 3.6],
+            opacity: [0.4, 0],
+            transition: {
+                duration: 8,
+                ease: "easeOut",
+                repeat: Infinity,
+                delay
+            }
+        }
+    });
+
     return (
         <div className="pulse-container">
             <style>{`
@@ -117,6 +151,21 @@ const NeuralPulse = () => {
                     position: relative;
                 }
 
+                .bg-layer {
+                    position: absolute; inset: 0;
+                    opacity: 0;
+                    transition: opacity 3s ease-in-out;
+                    z-index: 0;
+                    pointer-events: none;
+                }
+                .bg-layer.active {
+                    opacity: 0.45;
+                }
+                .bg-idle { background: radial-gradient(circle at center, #0f172a 0%, #020617 100%); }
+                .bg-inhale { background: radial-gradient(circle at center, #2e1065 0%, #020617 100%); }
+                .bg-hold { background: radial-gradient(circle at center, #0c4a6e 0%, #020617 100%); }
+                .bg-exhale { background: radial-gradient(circle at center, #022c22 0%, #020617 100%); }
+
                 .back-link {
                     position: absolute; top: 4rem; left: 4vw;
                     color: #64748b; text-decoration: none; font-weight: 800;
@@ -125,6 +174,16 @@ const NeuralPulse = () => {
                 }
                 .back-link:hover { color: white; transform: translateX(-5px); }
 
+                .orb-wrapper {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-top: 6rem; /* Shifted downwards */
+                    margin-bottom: 2rem;
+                    z-index: 5;
+                }
+
                 .pulse-orb {
                     width: min(260px, 50vw); height: min(260px, 50vw);
                     border-radius: 50%;
@@ -132,7 +191,7 @@ const NeuralPulse = () => {
                     display: flex; align-items: center; justify-content: center;
                     position: relative;
                     transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);
-                    margin-top: 3rem;
+                    z-index: 6;
                 }
 
                 .inner-orb {
@@ -140,13 +199,27 @@ const NeuralPulse = () => {
                     border-radius: 50%;
                     background: white;
                     box-shadow: 0 0 50px var(--pulse-color);
+                    z-index: 7;
+                }
+
+                .ripple-ring {
+                    position: absolute;
+                    width: min(260px, 50vw);
+                    height: min(260px, 50vw);
+                    border-radius: 50%;
+                    border: 1px solid var(--pulse-color);
+                    box-shadow: 0 0 20px var(--pulse-color);
+                    pointer-events: none;
+                    opacity: 0;
+                    z-index: 3;
                 }
 
                 .instruction-text {
                     font-family: 'Playfair Display', serif;
                     font-size: clamp(3rem, 7vh, 5rem);
-                    margin: 2rem 0 0.5rem;
+                    margin: 1.5rem 0 0.5rem;
                     height: 5.5rem;
+                    z-index: 5;
                 }
 
                 .timer-text {
@@ -154,13 +227,15 @@ const NeuralPulse = () => {
                     font-weight: 800;
                     color: #64748b;
                     letter-spacing: 5px;
+                    z-index: 5;
                 }
 
                 .controls {
-                    margin-top: 3rem;
+                    margin-top: 3.5rem;
                     display: flex;
                     gap: 3rem;
                     align-items: center;
+                    z-index: 5;
                 }
 
                 .play-btn {
@@ -179,8 +254,15 @@ const NeuralPulse = () => {
                     position: absolute; inset: 0;
                     background: url('/grid.png') repeat;
                     opacity: 0.05; pointer-events: none;
+                    z-index: 1;
                 }
             `}</style>
+
+            {/* Premium background transition layers */}
+            <div className={`bg-layer bg-idle ${!isActive ? 'active' : ''}`} />
+            <div className={`bg-layer bg-inhale ${isActive && phase === 'Inhale' ? 'active' : ''}`} />
+            <div className={`bg-layer bg-hold ${isActive && phase === 'Hold' ? 'active' : ''}`} />
+            <div className={`bg-layer bg-exhale ${isActive && phase === 'Exhale' ? 'active' : ''}`} />
 
             <div className="neural-lines" />
 
@@ -188,18 +270,44 @@ const NeuralPulse = () => {
                 <ArrowLeft size={16} /> EXIT NEURAL SYNC
             </Link>
 
-            <motion.div 
-                className="pulse-orb"
-                animate={{ scale: getCircleScale() }}
-                transition={{ duration: phase === 'Inhale' ? 4 : (phase === 'Hold' ? 7 : 8), ease: "easeInOut" }}
-                style={{ '--pulse-color': getPulseColor() }}
-            >
+            <div className="orb-wrapper">
+                {/* Concentric expanding ripples */}
+                {isActive && (
+                    <>
+                        <motion.div 
+                            className="ripple-ring"
+                            variants={getRippleVariants(0)}
+                            animate={phase}
+                            style={{ '--pulse-color': getPulseColor() }}
+                        />
+                        <motion.div 
+                            className="ripple-ring"
+                            variants={getRippleVariants(1.3)}
+                            animate={phase}
+                            style={{ '--pulse-color': getPulseColor() }}
+                        />
+                        <motion.div 
+                            className="ripple-ring"
+                            variants={getRippleVariants(2.6)}
+                            animate={phase}
+                            style={{ '--pulse-color': getPulseColor() }}
+                        />
+                    </>
+                )}
+
                 <motion.div 
-                    className="inner-orb"
-                    animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                />
-            </motion.div>
+                    className="pulse-orb"
+                    animate={{ scale: getCircleScale() }}
+                    transition={{ duration: phase === 'Inhale' ? 4 : (phase === 'Hold' ? 7 : 8), ease: "easeInOut" }}
+                    style={{ '--pulse-color': getPulseColor() }}
+                >
+                    <motion.div 
+                        className="inner-orb"
+                        animate={{ opacity: [0.5, 1, 0.5] }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                    />
+                </motion.div>
+            </div>
 
             <h1 className="instruction-text">{isActive ? phase : 'Ready?'}</h1>
             <div className="timer-text">{isActive ? `${seconds}s` : 'INITIALIZE PULSE'}</div>
@@ -216,7 +324,7 @@ const NeuralPulse = () => {
                 <div style={{ width: '24px' }} />
             </div>
 
-            <div style={{ marginTop: '2.5rem', color: '#1e293b', fontWeight: 800, fontSize: '0.7rem', letterSpacing: '4px' }}>
+            <div style={{ marginTop: '2.5rem', color: '#64748b', fontWeight: 800, fontSize: '0.7rem', letterSpacing: '4px', zIndex: 5 }}>
                 4 SEC INHALE • 7 SEC HOLD • 8 SEC EXHALE
             </div>
         </div>

@@ -32,6 +32,7 @@ ChartJS.register(
 );
 
 import { generateNeuralRevelation } from '../services/aiService';
+import { useAudioMixer } from '../context/AudioContext';
 
 const UserDashboard = () => {
     const { user, baselines } = useAuth();
@@ -39,29 +40,22 @@ const UserDashboard = () => {
     const [showCalibrationModal, setShowCalibrationModal] = useState(false);
     const [aiInsight, setAiInsight] = useState('SCANNING NEURAL GRID...');
     const [systemStats, setSystemStats] = useState({ totalIdentities: 0, systemStatus: 'INITIALIZING...' });
-    const [isPlaying, setIsPlaying] = useState(() => {
-        const audio = document.getElementById('neural-audio-driver');
-        return audio ? !audio.paused : false;
-    });
     const [journalCount, setJournalCount] = useState(0);
+    const [moodHistory, setMoodHistory] = useState([]);
 
-    useEffect(() => {
-        const audio = document.getElementById('neural-audio-driver');
-        if (!audio) return;
+    const { 
+        volumes, setVolumes, isPlaying, isGlobalPlaying, 
+        startLofi, stopLofi, startRain, stopRain, 
+        startBinaural, stopBinaural, startWhiteNoise, stopWhiteNoise, stopAll 
+    } = useAudioMixer();
 
-        const handlePlay = () => setIsPlaying(true);
-        const handlePause = () => setIsPlaying(false);
-
-        setIsPlaying(!audio.paused);
-
-        audio.addEventListener('play', handlePlay);
-        audio.addEventListener('pause', handlePause);
-
-        return () => {
-            audio.removeEventListener('play', handlePlay);
-            audio.removeEventListener('pause', handlePause);
-        };
-    }, []);
+    const streakDays = Array.from({ length: 28 }, (_, i) => {
+        const d = new Date();
+        d.setDate(d.getDate() - (27 - i));
+        const dateString = d.toISOString().split('T')[0];
+        const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        return { dateString, label };
+    });
 
     useEffect(() => {
         if (user) {
@@ -99,10 +93,22 @@ const UserDashboard = () => {
                     console.error("Failed to fetch journals", e);
                 }
             };
+
+            const getMoodHistory = async () => {
+                try {
+                    const token = JSON.parse(localStorage.getItem('user'))?.token;
+                    const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+                    const res = await axios.get(`${import.meta.env.VITE_API_URL}/moods`, config);
+                    setMoodHistory(res.data);
+                } catch (e) {
+                    console.error("Failed to fetch mood history", e);
+                }
+            };
             
             getAIInsight();
             getSystemStats();
             getJournalCount();
+            getMoodHistory();
 
             // Show modal if energy is the default 88 (simulating uncalibrated)
             if (!baselines.calibrationComplete) {
@@ -111,27 +117,6 @@ const UserDashboard = () => {
             }
         }
     }, [user, baselines]);
-
-    const toggleAudio = () => {
-        const audio = document.getElementById('neural-audio-driver');
-        if (!audio) return;
-
-        if (isPlaying) {
-            audio.pause();
-            setIsPlaying(false);
-        } else {
-            // Using a very reliable, high-availability MP3 link
-            audio.src = baselines.energy < 70 
-                ? "/audio/lofi.mp3" 
-                : "/audio/rain.mp3";
-            
-            audio.play().then(() => {
-                setIsPlaying(true);
-            }).catch(e => {
-                console.error("Neural Handshake Failed", e);
-            });
-        }
-    };
 
     const chartOptions = {
         responsive: true,
@@ -359,26 +344,72 @@ const UserDashboard = () => {
                     <div className="luxury-card span-small" style={{ background: 'rgba(139, 92, 246, 0.05)' }}>
                         <Globe className="card-icon" size={32} />
                         <div>
-                            <div className="card-title">Campus Pulse</div>
-                            <div style={{ display: 'flex', gap: '4px', marginTop: '1.5rem' }}>
-                                {[1,2,3,4,5,6,7,8,9,10,11,12].map(i => <div key={i} style={{ flex: 1, height: '30px', background: i > 10 ? '#ef4444' : (i > 4 ? '#8b5cf6' : '#10b981'), opacity: 0.3 + (Math.random() * 0.7), borderRadius: '4px' }} />)}
+                            <div className="card-title">Wellness Streaks</div>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '6px', marginTop: '1.5rem' }}>
+                                {streakDays.map((day, idx) => {
+                                    const hasActivity = moodHistory.some(m => m.date === day.dateString);
+                                    return (
+                                        <div 
+                                            key={idx} 
+                                            title={day.label + (hasActivity ? ': Active Calibration' : ': Rest Day')}
+                                            style={{ 
+                                                aspectRatio: '1/1', 
+                                                background: hasActivity ? '#8b5cf6' : 'rgba(255,255,255,0.03)', 
+                                                border: '1px solid ' + (hasActivity ? '#a855f7' : 'rgba(255,255,255,0.05)'),
+                                                borderRadius: '4px',
+                                                boxShadow: hasActivity ? '0 0 8px rgba(139, 92, 246, 0.4)' : 'none',
+                                                transition: '0.3s'
+                                            }} 
+                                        />
+                                    );
+                                })}
                             </div>
-                            <div className="pulse-legend">
-                                <div className="legend-item"><div className="legend-dot" style={{ background: '#10b981' }} /> STABLE</div>
-                                <div className="legend-item"><div className="legend-dot" style={{ background: '#8b5cf6' }} /> FOCUS</div>
-                                <div className="legend-item"><div className="legend-dot" style={{ background: '#ef4444' }} /> STRESS</div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.6rem', fontWeight: 800, color: '#64748b', marginTop: '1rem', letterSpacing: '1px' }}>
+                                <span>28 DAYS AGO</span>
+                                <span>TODAY</span>
                             </div>
                         </div>
                     </div>
 
                     <div className="luxury-card span-wide" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <div><div className="card-title">Neural Audio Engine</div><div className="card-value" style={{ fontSize: '2.5rem' }}>{isPlaying ? 'Streaming Peace...' : 'Soundscapes'}</div></div>
-                            {isPlaying ? <div className="audio-wave">{[1,2,3,4,5].map(i => <div key={i} className="wave-bar" style={{ animationDelay: `${i*0.1}s` }} />)}</div> : <Waves color="#8b5cf6" size={32} />}
+                            <div>
+                                <div className="card-title">Neural Audio Engine</div>
+                                <div className="card-value" style={{ fontSize: '2.5rem' }}>
+                                    {isGlobalPlaying ? 'Resonance Active' : 'Soundscapes'}
+                                </div>
+                            </div>
+                            {isGlobalPlaying ? (
+                                <div className="audio-wave">
+                                    {[1,2,3,4,5].map(i => <div key={i} className="wave-bar" style={{ animationDelay: `${i*0.1}s` }} />)}
+                                </div>
+                            ) : (
+                                <Waves color="#8b5cf6" size={32} />
+                            )}
                         </div>
-                        <div style={{ display: 'flex', gap: '1rem', marginTop: '2.5rem' }}>
-                            <div className="ai-bubble" style={{ flex: 1 }}><strong>Context Suggestion:</strong> {baselines.calibrationComplete ? (baselines.energy < 70 ? 'Low energy detected. Use Lo-Fi Focus.' : 'Stability high. Deep Rain recommended.') : 'Awaiting calibration for personalized context suggestions.'}</div>
-                            <button onClick={toggleAudio} style={{ background: isPlaying ? '#ef4444' : 'white', color: isPlaying ? 'white' : 'black', border: 'none', padding: '1rem 2rem', borderRadius: '1.5rem', fontWeight: 900, cursor: 'pointer' }}>{isPlaying ? 'STOP NEURAL STREAM' : 'INITIALIZE AUDIO'}</button>
+                        <div style={{ display: 'flex', gap: '1rem', marginTop: '2.5rem', flexWrap: 'wrap' }}>
+                            <div className="ai-bubble" style={{ flex: 1, minWidth: '250px' }}>
+                                <strong>Context Suggestion:</strong> {baselines.calibrationComplete ? (baselines.energy < 70 ? 'Low energy detected. Use Binaural Alpha waves combined with Lofi Focus.' : 'Stability high. Deep Rain recommended.') : 'Awaiting calibration for personalized context suggestions.'}
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                {isGlobalPlaying ? (
+                                    <button onClick={stopAll} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '1rem 2rem', borderRadius: '1.5rem', fontWeight: 900, cursor: 'pointer' }}>STOP NEURAL STREAM</button>
+                                ) : (
+                                    <button 
+                                        onClick={() => {
+                                            if (baselines.energy < 70) {
+                                                startLofi();
+                                                startBinaural();
+                                            } else {
+                                                startRain();
+                                            }
+                                        }} 
+                                        style={{ background: 'white', color: 'black', border: 'none', padding: '1rem 2rem', borderRadius: '1.5rem', fontWeight: 900, cursor: 'pointer' }}
+                                    >
+                                        INITIALIZE RECOMMENDATION
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

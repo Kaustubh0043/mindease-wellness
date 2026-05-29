@@ -7,6 +7,55 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { useAudioMixer } from '../context/AudioContext';
+
+const AudioSliderRow = ({ label, isPlaying, onToggle, volume, onVolumeChange }) => {
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', background: 'rgba(255, 255, 255, 0.02)', padding: '0.75rem 1rem', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.03)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: isPlaying ? '#8b5cf6' : '#64748b', transition: '0.3s', letterSpacing: '1px' }}>{label}</span>
+                <button 
+                    onClick={onToggle}
+                    style={{
+                        background: isPlaying ? 'rgba(139, 92, 246, 0.15)' : 'rgba(255, 255, 255, 0.03)',
+                        border: '1px solid ' + (isPlaying ? 'rgba(139, 92, 246, 0.3)' : 'rgba(255, 255, 255, 0.05)'),
+                        color: isPlaying ? '#a855f7' : '#64748b',
+                        padding: '0.25rem 0.5rem',
+                        borderRadius: '0.5rem',
+                        fontSize: '0.6rem',
+                        fontWeight: 900,
+                        cursor: 'pointer',
+                        letterSpacing: '1px',
+                        textTransform: 'uppercase',
+                        transition: '0.3s'
+                    }}
+                >
+                    {isPlaying ? 'ON' : 'OFF'}
+                </button>
+            </div>
+            {isPlaying && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.25rem' }}>
+                    <input 
+                        type="range" 
+                        min="0" 
+                        max="100" 
+                        value={volume}
+                        onChange={(e) => onVolumeChange(parseInt(e.target.value))}
+                        style={{
+                            flex: 1,
+                            height: '2px',
+                            background: 'rgba(255,255,255,0.1)',
+                            accentColor: '#8b5cf6',
+                            outline: 'none',
+                            cursor: 'pointer'
+                        }}
+                    />
+                    <span style={{ fontSize: '0.6rem', color: '#8b5cf6', width: '25px', textAlign: 'right', fontWeight: 800 }}>{volume}%</span>
+                </div>
+            )}
+        </div>
+    );
+};
 
 const Navbar = () => {
     const { user, logout, baselines } = useAuth();
@@ -14,43 +63,13 @@ const Navbar = () => {
     const navigate = useNavigate();
     const [showNotifications, setShowNotifications] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+    const [showMixer, setShowMixer] = useState(false);
 
-    useEffect(() => {
-        const audio = document.getElementById('neural-audio-driver');
-        if (!audio) return;
-
-        const handlePlay = () => setIsAudioPlaying(true);
-        const handlePause = () => setIsAudioPlaying(false);
-
-        setIsAudioPlaying(!audio.paused);
-
-        audio.addEventListener('play', handlePlay);
-        audio.addEventListener('pause', handlePause);
-
-        return () => {
-            audio.removeEventListener('play', handlePlay);
-            audio.removeEventListener('pause', handlePause);
-        };
-    }, []);
-
-    const toggleGlobalAudio = () => {
-        const audio = document.getElementById('neural-audio-driver');
-        if (!audio) return;
-
-        if (isAudioPlaying) {
-            audio.pause();
-        } else {
-            if (!audio.src || audio.src === '' || audio.src.includes(window.location.host + '/#')) {
-                audio.src = (baselines.energy < 70) 
-                    ? "/audio/lofi.mp3" 
-                    : "/audio/rain.mp3";
-            }
-            audio.play().catch(e => {
-                console.error("Global Audio Trigger Failed", e);
-            });
-        }
-    };
+    const { 
+        volumes, setVolumes, isPlaying, isGlobalPlaying, 
+        startLofi, stopLofi, startRain, stopRain, 
+        startBinaural, stopBinaural, startWhiteNoise, stopWhiteNoise, stopAll 
+    } = useAudioMixer();
 
     const handleLogout = () => {
         logout();
@@ -146,6 +165,12 @@ const Navbar = () => {
                         border-radius: 2rem; padding: 2rem; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
                         z-index: 1000;
                     }
+                    .mixer-dropdown {
+                        position: absolute; left: 280px; bottom: 120px;
+                        width: 320px; background: #0f172a; border: 1px solid rgba(139, 92, 246, 0.2);
+                        border-radius: 2rem; padding: 2rem; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+                        z-index: 1000;
+                    }
 
                     .logout-btn {
                         margin-top: 1.5rem; display: flex; align-items: center; gap: 1rem;
@@ -230,6 +255,16 @@ const Navbar = () => {
                             border-radius: 1.5rem;
                             padding: 1.25rem;
                         }
+                        .mixer-dropdown {
+                            position: relative;
+                            left: 0;
+                            bottom: 0;
+                            width: 100%;
+                            margin-top: 1rem;
+                            box-shadow: none;
+                            border-radius: 1.5rem;
+                            padding: 1.25rem;
+                        }
                         @keyframes wave {
                             0%, 100% { height: 3px; }
                             50% { height: 12px; }
@@ -292,14 +327,14 @@ const Navbar = () => {
                     {user?.role !== 'ADMIN' && (
                         <div 
                             className="util-btn" 
-                            onClick={toggleGlobalAudio}
+                            onClick={() => { setShowMixer(!showMixer); setShowNotifications(false); }}
                             style={{ borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '1.5rem', marginTop: '1rem' }}
                         >
-                            {isAudioPlaying ? <Volume2 size={18} style={{ color: '#8b5cf6' }} /> : <VolumeX size={18} />}
-                            <span style={{ color: isAudioPlaying ? '#8b5cf6' : '#64748b' }}>
-                                {isAudioPlaying ? 'STREAMING...' : 'MUTED'}
+                            <Volume2 size={18} style={{ color: isGlobalPlaying ? '#8b5cf6' : '#64748b' }} />
+                            <span style={{ color: isGlobalPlaying ? '#8b5cf6' : '#64748b' }}>
+                                AMBIENT MIXER
                             </span>
-                            {isAudioPlaying && (
+                            {isGlobalPlaying && (
                                 <div style={{ display: 'flex', gap: '2px', alignItems: 'flex-end', height: '12px', marginLeft: 'auto' }}>
                                     {[1,2,3].map(i => (
                                         <div 
@@ -318,6 +353,68 @@ const Navbar = () => {
                             )}
                         </div>
                     )}
+
+                    <AnimatePresence>
+                        {showMixer && (
+                            <motion.div 
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                className="mixer-dropdown"
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                                    <h4 style={{ fontSize: '0.65rem', letterSpacing: '3px', color: '#8b5cf6', margin: 0 }}>AMBIENT RESONANCE</h4>
+                                    {isGlobalPlaying && (
+                                        <button 
+                                            onClick={stopAll} 
+                                            style={{ 
+                                                background: 'transparent', 
+                                                border: 'none', 
+                                                color: '#ef4444', 
+                                                fontSize: '0.6rem', 
+                                                fontWeight: 800, 
+                                                cursor: 'pointer', 
+                                                letterSpacing: '1px',
+                                                textTransform: 'uppercase'
+                                            }}
+                                        >
+                                            MUTE ALL
+                                        </button>
+                                    )}
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                    <AudioSliderRow 
+                                        label="Lofi Focus" 
+                                        isPlaying={isPlaying.lofi} 
+                                        onToggle={isPlaying.lofi ? stopLofi : startLofi} 
+                                        volume={volumes.lofi} 
+                                        onVolumeChange={(val) => setVolumes(v => ({ ...v, lofi: val }))} 
+                                    />
+                                    <AudioSliderRow 
+                                        label="Deep Rain" 
+                                        isPlaying={isPlaying.rain} 
+                                        onToggle={isPlaying.rain ? stopRain : startRain} 
+                                        volume={volumes.rain} 
+                                        onVolumeChange={(val) => setVolumes(v => ({ ...v, rain: val }))} 
+                                    />
+                                    <AudioSliderRow 
+                                        label="Alpha Waves" 
+                                        isPlaying={isPlaying.binaural} 
+                                        onToggle={isPlaying.binaural ? stopBinaural : startBinaural} 
+                                        volume={volumes.binaural} 
+                                        onVolumeChange={(val) => setVolumes(v => ({ ...v, binaural: val }))} 
+                                    />
+                                    <AudioSliderRow 
+                                        label="White Noise" 
+                                        isPlaying={isPlaying.whitenoise} 
+                                        onToggle={isPlaying.whitenoise ? stopWhiteNoise : startWhiteNoise} 
+                                        volume={volumes.whitenoise} 
+                                        onVolumeChange={(val) => setVolumes(v => ({ ...v, whitenoise: val }))} 
+                                    />
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
 
                 <button onClick={handleLogout} className="logout-btn">

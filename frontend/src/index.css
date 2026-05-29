@@ -206,25 +206,29 @@ h1, h2, h3, .logo {
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: #8b5cf6; /* Vibrant premium purple */
-  border: 2.5px solid #ffffff; /* Clear white outline */
+  background: rgba(139, 92, 246, 0.1); /* Vibrant premium purple glass */
+  border: 2px solid rgba(139, 92, 246, 0.45); /* Purple outline */
   border-radius: 8px;
   cursor: pointer;
-  color: white;
+  color: #8b5cf6; /* Purple icon */
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
   padding: 0;
   z-index: 1100;
+  outline: none;
 }
 
 .menu-toggle-btn:hover {
-  background: #7c3aed;
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.7);
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.6);
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3);
 }
 
-.menu-toggle-btn:active {
+.menu-toggle-btn:active, .menu-toggle-btn:focus {
   transform: translateY(1px);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.4);
+  outline: none;
 }
 
 @media (max-width: 1024px) {
@@ -256,7 +260,7 @@ h1, h2, h3, .logo {
   }
 }
 
-/* Responsive Padding Overrides for mobile/tablet screens */
+/* Global Responsive Padding Overrides for mobile/tablet screens */
 @media (max-width: 1024px) {
   .content-area, .dashboard-content {
     padding: 7rem 1.5rem 3rem !important;
@@ -264,6 +268,49 @@ h1, h2, h3, .logo {
   .luxury-dot, .luxury-outline {
     display: none !important;
   }
+}
+
+/* Premium Bento Grid & Luxury Card System */
+.luxury-card {
+  background: rgba(255, 255, 255, 0.03); 
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 3rem;
+  padding: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  position: relative;
+}
+
+.luxury-card:hover { 
+  background: rgba(255, 255, 255, 0.05); 
+  border-color: rgba(139, 92, 246, 0.35);
+  transform: translateY(-8px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.15);
+}
+
+.luxury-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.03),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: 0.75s;
+  pointer-events: none;
+}
+
+.luxury-card:hover::after {
+  left: 125%;
+  transition: all 0.75s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { ChevronRight, Zap, Shield, Target, Brain, Waves, Activity, Sparkles, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAudioMixer } from '../context/AudioContext';
 
 const Calibration = () => {
     const [step, setStep] = useState(0);
@@ -101,6 +102,7 @@ const Calibration = () => {
     ];
 
     const { updateBaselines } = useAuth();
+    const { stopAll } = useAudioMixer();
     const [answers, setAnswers] = useState([]);
 
     const handleNext = (value) => {
@@ -138,10 +140,7 @@ const Calibration = () => {
                     resonance: Math.round(avgEnergy * 0.8),
                     calibrationComplete: true
                 });
-                const audio = document.getElementById('neural-audio-driver');
-                if (audio) {
-                    audio.pause();
-                }
+                stopAll();
                 navigate('/dashboard');
             }, 4000);
         }

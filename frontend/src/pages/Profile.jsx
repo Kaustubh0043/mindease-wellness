@@ -276,7 +276,7 @@ const Profile = () => {
                         margin-bottom: 2rem;
                     }
                     .content-area {
-                        padding: 7rem 1.5rem 3rem !important;
+                        padding: 2rem 0 !important;
                     }
                     .span-2 {
                         grid-column: span 1;
