@@ -40,9 +40,16 @@ const Login = () => {
     const [showVerify, setShowVerify] = useState(false);
     const [name, setName] = useState('');
     const [verifyCode, setVerifyCode] = useState('');
-    const { login, register, verifyEmail, loginWithGoogle } = useAuth();
+    const { user, login, register, verifyEmail, loginWithGoogle } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+
+    // Auto-redirect to dashboard if user is already logged in
+    useEffect(() => {
+        if (user) {
+            navigate(user.role === 'ADMIN' ? '/admin' : '/dashboard');
+        }
+    }, [user, navigate]);
 
     const handleGoogleSuccess = async (response) => {
         setIsSubmitting(true);
