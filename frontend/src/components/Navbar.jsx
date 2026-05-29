@@ -120,6 +120,17 @@ const Navbar = () => {
                         padding: 2rem 1.5rem; display: flex; flex-direction: column;
                         z-index: 100; border-right: 1px solid rgba(255,255,255,0.03);
                         background: rgba(2, 6, 23, 0.4); backdrop-filter: blur(40px);
+                        overflow-y: auto;
+                    }
+                    .ghost-sidebar::-webkit-scrollbar {
+                        width: 4px;
+                    }
+                    .ghost-sidebar::-webkit-scrollbar-track {
+                        background: transparent;
+                    }
+                    .ghost-sidebar::-webkit-scrollbar-thumb {
+                        background: rgba(139, 92, 246, 0.2);
+                        border-radius: 2px;
                     }
                     .sidebar-logo {
                         font-family: 'Outfit'; font-weight: 800; font-size: 1.25rem;
@@ -233,6 +244,7 @@ const Navbar = () => {
                             background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(40px);
                             transform: translateX(-100%);
                             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                            overflow-y: auto;
                         }
                         .ghost-sidebar.open {
                             transform: translateX(0);
