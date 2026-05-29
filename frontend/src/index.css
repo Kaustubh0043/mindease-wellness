@@ -198,3 +198,38 @@ h1, h2, h3, .logo {
     padding: 7rem 1.5rem 2rem 1.5rem; /* Pushes content down to fit top bar */
   }
 }
+
+/* Shared Premium Hamburger Menu Toggle Button */
+.menu-toggle-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #3b82f6; /* Vibrant premium blue */
+  border: 2.5px solid #ffffff; /* Clear white outline */
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  padding: 0;
+  z-index: 1100;
+}
+
+.menu-toggle-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.6);
+}
+
+.menu-toggle-btn:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 1024px) {
+  .menu-toggle-btn {
+    display: flex;
+  }
+}
+
