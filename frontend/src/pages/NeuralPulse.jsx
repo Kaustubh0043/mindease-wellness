@@ -132,6 +132,7 @@ const NeuralPulse = () => {
                     display: flex; align-items: center; justify-content: center;
                     position: relative;
                     transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);
+                    margin-top: 5rem;
                 }
 
                 .inner-orb {

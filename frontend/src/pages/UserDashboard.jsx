@@ -39,7 +39,10 @@ const UserDashboard = () => {
     const [showCalibrationModal, setShowCalibrationModal] = useState(false);
     const [aiInsight, setAiInsight] = useState('SCANNING NEURAL GRID...');
     const [systemStats, setSystemStats] = useState({ totalIdentities: 0, systemStatus: 'INITIALIZING...' });
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(() => {
+        const audio = document.getElementById('neural-audio-driver');
+        return audio ? !audio.paused : false;
+    });
     const [journalCount, setJournalCount] = useState(0);
 
     useEffect(() => {
@@ -130,7 +133,6 @@ const UserDashboard = () => {
 
     return (
         <div className="dashboard-space">
-            <audio id="neural-audio-driver" loop crossOrigin="anonymous" />
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Outfit:wght@100..900&display=swap');
                 

@@ -68,6 +68,7 @@ function App() {
         <BrandLoader onComplete={() => setShowLoader(false)} />
       )}
       <CustomCursor />
+      <audio id="neural-audio-driver" loop crossOrigin="anonymous" />
       <Router>
         <ScrollToTop />
         <LayoutWrapper>
