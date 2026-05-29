@@ -46,6 +46,24 @@ const UserDashboard = () => {
     const [journalCount, setJournalCount] = useState(0);
 
     useEffect(() => {
+        const audio = document.getElementById('neural-audio-driver');
+        if (!audio) return;
+
+        const handlePlay = () => setIsPlaying(true);
+        const handlePause = () => setIsPlaying(false);
+
+        setIsPlaying(!audio.paused);
+
+        audio.addEventListener('play', handlePlay);
+        audio.addEventListener('pause', handlePause);
+
+        return () => {
+            audio.removeEventListener('play', handlePlay);
+            audio.removeEventListener('pause', handlePause);
+        };
+    }, []);
+
+    useEffect(() => {
         if (user) {
             setUserData({ 
                 name: user.name, 

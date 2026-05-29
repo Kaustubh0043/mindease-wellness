@@ -3,10 +3,10 @@ import { useAuth } from '../context/AuthContext';
 import { 
     LayoutDashboard, Brain, Activity, User, 
     LogOut, Settings, MessageSquare, Shield, Bell, Info, Circle, Wind, Heart,
-    Menu, X
+    Menu, X, Volume2, VolumeX
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Navbar = () => {
     const { user, logout, baselines } = useAuth();
@@ -14,6 +14,43 @@ const Navbar = () => {
     const navigate = useNavigate();
     const [showNotifications, setShowNotifications] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+
+    useEffect(() => {
+        const audio = document.getElementById('neural-audio-driver');
+        if (!audio) return;
+
+        const handlePlay = () => setIsAudioPlaying(true);
+        const handlePause = () => setIsAudioPlaying(false);
+
+        setIsAudioPlaying(!audio.paused);
+
+        audio.addEventListener('play', handlePlay);
+        audio.addEventListener('pause', handlePause);
+
+        return () => {
+            audio.removeEventListener('play', handlePlay);
+            audio.removeEventListener('pause', handlePause);
+        };
+    }, []);
+
+    const toggleGlobalAudio = () => {
+        const audio = document.getElementById('neural-audio-driver');
+        if (!audio) return;
+
+        if (isAudioPlaying) {
+            audio.pause();
+        } else {
+            if (!audio.src || audio.src === '' || audio.src.includes(window.location.host + '/#')) {
+                audio.src = (baselines.energy < 70) 
+                    ? "/audio/lofi.mp3" 
+                    : "/audio/rain.mp3";
+            }
+            audio.play().catch(e => {
+                console.error("Global Audio Trigger Failed", e);
+            });
+        }
+    };
 
     const handleLogout = () => {
         logout();
@@ -193,6 +230,10 @@ const Navbar = () => {
                             border-radius: 1.5rem;
                             padding: 1.25rem;
                         }
+                        @keyframes wave {
+                            0%, 100% { height: 3px; }
+                            50% { height: 12px; }
+                        }
                     }
                 `}</style>
 
@@ -247,6 +288,36 @@ const Navbar = () => {
                             </motion.div>
                         )}
                     </AnimatePresence>
+                    
+                    {user?.role !== 'ADMIN' && (
+                        <div 
+                            className="util-btn" 
+                            onClick={toggleGlobalAudio}
+                            style={{ borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '1.5rem', marginTop: '1rem' }}
+                        >
+                            {isAudioPlaying ? <Volume2 size={18} style={{ color: '#8b5cf6' }} /> : <VolumeX size={18} />}
+                            <span style={{ color: isAudioPlaying ? '#8b5cf6' : '#64748b' }}>
+                                {isAudioPlaying ? 'STREAMING...' : 'MUTED'}
+                            </span>
+                            {isAudioPlaying && (
+                                <div style={{ display: 'flex', gap: '2px', alignItems: 'flex-end', height: '12px', marginLeft: 'auto' }}>
+                                    {[1,2,3].map(i => (
+                                        <div 
+                                            key={i} 
+                                            style={{ 
+                                                width: '2px', 
+                                                height: '100%', 
+                                                background: '#8b5cf6', 
+                                                borderRadius: '1px',
+                                                animation: 'wave 1s infinite ease-in-out',
+                                                animationDelay: `${i*0.15}s` 
+                                            }} 
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 <button onClick={handleLogout} className="logout-btn">

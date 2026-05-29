@@ -126,17 +126,17 @@ const NeuralPulse = () => {
                 .back-link:hover { color: white; transform: translateX(-5px); }
 
                 .pulse-orb {
-                    width: 300px; height: 300px;
+                    width: min(260px, 50vw); height: min(260px, 50vw);
                     border-radius: 50%;
                     background: radial-gradient(circle, var(--pulse-color) 0%, transparent 70%);
                     display: flex; align-items: center; justify-content: center;
                     position: relative;
                     transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);
-                    margin-top: 5rem;
+                    margin-top: 3rem;
                 }
 
                 .inner-orb {
-                    width: 150px; height: 150px;
+                    width: min(130px, 25vw); height: min(130px, 25vw);
                     border-radius: 50%;
                     background: white;
                     box-shadow: 0 0 50px var(--pulse-color);
@@ -144,27 +144,27 @@ const NeuralPulse = () => {
 
                 .instruction-text {
                     font-family: 'Playfair Display', serif;
-                    font-size: 5rem;
-                    margin: 4rem 0 1rem;
-                    height: 6rem;
+                    font-size: clamp(3rem, 7vh, 5rem);
+                    margin: 2rem 0 0.5rem;
+                    height: 5.5rem;
                 }
 
                 .timer-text {
-                    font-size: 1.5rem;
+                    font-size: 1.25rem;
                     font-weight: 800;
                     color: #64748b;
                     letter-spacing: 5px;
                 }
 
                 .controls {
-                    margin-top: 6rem;
+                    margin-top: 3rem;
                     display: flex;
                     gap: 3rem;
                     align-items: center;
                 }
 
                 .play-btn {
-                    width: 80px; height: 80px;
+                    width: 70px; height: 70px;
                     border-radius: 50%;
                     background: white;
                     color: black;
@@ -216,7 +216,7 @@ const NeuralPulse = () => {
                 <div style={{ width: '24px' }} />
             </div>
 
-            <div style={{ marginTop: '4rem', color: '#1e293b', fontWeight: 800, fontSize: '0.7rem', letterSpacing: '4px' }}>
+            <div style={{ marginTop: '2.5rem', color: '#1e293b', fontWeight: 800, fontSize: '0.7rem', letterSpacing: '4px' }}>
                 4 SEC INHALE • 7 SEC HOLD • 8 SEC EXHALE
             </div>
         </div>

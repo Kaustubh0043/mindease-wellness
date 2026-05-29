@@ -259,7 +259,7 @@ h1, h2, h3, .logo {
 /* Responsive Padding Overrides for mobile/tablet screens */
 @media (max-width: 1024px) {
   .content-area, .dashboard-content {
-    padding: 1.5rem 0 !important;
+    padding: 7rem 1.5rem 3rem !important;
   }
   .luxury-dot, .luxury-outline {
     display: none !important;

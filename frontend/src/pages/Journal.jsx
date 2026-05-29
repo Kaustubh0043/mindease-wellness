@@ -46,6 +46,12 @@ const Journal = () => {
             await axios.post(`${import.meta.env.VITE_API_URL}/journal`, { content: combinedContent }, config);
             setTitle('');
             setEntry('');
+            
+            const audio = document.getElementById('neural-audio-driver');
+            if (audio) {
+                audio.pause();
+            }
+
             alert("REFLECTION ARCHIVED: Thoughts safely encrypted and synchronized.");
             fetchEntries();
         } catch (error) {

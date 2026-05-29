@@ -22,6 +22,11 @@ const MoodTracker = () => {
             stability: stabilityLabel
         });
         
+        const audio = document.getElementById('neural-audio-driver');
+        if (audio) {
+            audio.pause();
+        }
+        
         alert(`NEURAL FREQUENCY LOGGED: Resonance set to ${newEnergy}% (${stabilityLabel}).`);
     };
 

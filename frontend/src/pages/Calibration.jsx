@@ -138,6 +138,10 @@ const Calibration = () => {
                     resonance: Math.round(avgEnergy * 0.8),
                     calibrationComplete: true
                 });
+                const audio = document.getElementById('neural-audio-driver');
+                if (audio) {
+                    audio.pause();
+                }
                 navigate('/dashboard');
             }, 4000);
         }

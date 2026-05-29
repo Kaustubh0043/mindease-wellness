@@ -244,6 +244,15 @@ const Profile = () => {
                     display: block; width: 100%;
                 }
 
+                .span-2 {
+                    grid-column: span 2;
+                }
+                .autonomous-actions {
+                    display: flex;
+                    gap: 2rem;
+                    margin-top: 1rem;
+                }
+
                 @media (max-width: 900px) {
                     .profile-grid {
                         grid-template-columns: 1fr;
@@ -267,7 +276,15 @@ const Profile = () => {
                         margin-bottom: 2rem;
                     }
                     .content-area {
-                        padding: 2rem 0 !important;
+                        padding: 7rem 1.5rem 3rem !important;
+                    }
+                    .span-2 {
+                        grid-column: span 1;
+                    }
+                    .autonomous-actions {
+                        flex-direction: column;
+                        gap: 1rem;
+                        align-items: flex-start;
                     }
                 }
             `}</style>
@@ -356,9 +373,9 @@ const Profile = () => {
                                 <span className="label">NEURAL KEY</span>
                                 <div className="value" style={{ fontSize: '0.9rem', opacity: 0.5 }}>SHA-256 SYNCED</div>
                             </div>
-                            <div className="detail-card" style={{ gridColumn: 'span 2' }}>
+                            <div className="detail-card span-2">
                                 <span className="label">AUTONOMOUS OPTIONS</span>
-                                <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem' }}>
+                                <div className="autonomous-actions">
                                     <button 
                                         onClick={() => setIsEditing(true)}
                                         style={{ background: 'none', border: 'none', color: '#8b5cf6', fontWeight: 800, letterSpacing: '2px', fontSize: '0.7rem', cursor: 'pointer' }}
