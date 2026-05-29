@@ -84,6 +84,31 @@ const Documentation = () => {
                 .sidebar-item.active { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
                 .sidebar-item:hover:not(.active) { background: rgba(255,255,255,0.02); color: white; }
                 .content-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 4rem; border-radius: 3rem; backdrop-filter: blur(20px); }
+                
+                .docs-details-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 1.5rem;
+                }
+
+                @media (max-width: 1024px) {
+                    .docs-grid {
+                        grid-template-columns: 1fr;
+                        gap: 2rem;
+                        padding: 3rem 1.5rem;
+                    }
+                    .docs-sidebar {
+                        position: static;
+                    }
+                    .content-card {
+                        padding: 2rem 1.5rem;
+                        border-radius: 2rem;
+                    }
+                    .docs-details-grid {
+                        grid-template-columns: 1fr;
+                        gap: 1rem;
+                    }
+                }
             `}</style>
 
             <PublicNavbar />
@@ -136,7 +161,7 @@ const Documentation = () => {
                             )}
 
                             {content[activeTab].details && (
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+                                <div className="docs-details-grid">
                                     {content[activeTab].details.map((detail, i) => (
                                         <div key={i} style={{ padding: '2rem', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '2rem', textAlign: 'center' }}>
                                             <Sparkles size={20} style={{ color: '#8b5cf6', marginBottom: '1rem' }} />

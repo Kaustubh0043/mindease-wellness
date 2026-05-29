@@ -69,6 +69,19 @@ const AboutUs = () => {
                     background: #7c3aed;
                     transform: translateY(-2px);
                 }
+
+                .about-grid {
+                    display: grid;
+                    grid-template-columns: 1.5fr 1fr;
+                    gap: 3rem;
+                    margin-top: 4rem;
+                }
+                @media (max-width: 900px) {
+                    .about-grid {
+                        grid-template-columns: 1fr;
+                        gap: 2rem;
+                    }
+                }
             `}</style>
 
             <div className="liquid-bg" />
@@ -80,7 +93,7 @@ const AboutUs = () => {
                     <h1 className="massive-header">The Soul<br/><span style={{ fontStyle: 'italic', fontWeight: 400 }}>Behind</span> MindEase.</h1>
                 </motion.div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '3rem', marginTop: '4rem' }}>
+                <div className="about-grid">
                     {/* Left Column: Info */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
                         <section className="luxury-card">
@@ -162,7 +175,7 @@ const AboutUs = () => {
                 {/* --- PREMIUM FOOTER --- */}
                 <footer style={{ padding: '15vh 0 5vh', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center', marginTop: '10rem' }}>
                     <div className="massive-header" style={{ fontSize: 'clamp(3rem, 10vw, 8rem)', opacity: 0.1, color: 'white', marginBottom: '4rem', position: 'relative', zIndex: 0 }}>MINDEASE</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '3rem', marginBottom: '6rem', fontWeight: 800, fontSize: '0.75rem', letterSpacing: '4px', position: 'relative', zIndex: 100 }}>
+                    <div className="footer-links-container">
                         <Link to="/docs" style={{ display: 'inline-block', color: 'white', textDecoration: 'none', opacity: 1, fontWeight: 900, border: '2px solid #8b5cf6', padding: '0.8rem 2rem', borderRadius: '2rem', background: 'rgba(139, 92, 246, 0.2)', boxShadow: '0 0 20px rgba(139, 92, 246, 0.4)', transition: '0.3s' }} onMouseOver={e => e.target.style.background = '#8b5cf6'} onMouseOut={e => e.target.style.background = 'rgba(139, 92, 246, 0.2)'}>GET SUPPORT</Link>
                         <a href="https://instagram.com/mindease" target="_blank" rel="noreferrer" style={{ color: 'white', textDecoration: 'none', opacity: 0.5, transition: '0.3s' }} onMouseOver={e => e.target.style.opacity = 1} onMouseOut={e => e.target.style.opacity = 0.5}>INSTAGRAM</a>
                         <a href="https://twitter.com/mindease" target="_blank" rel="noreferrer" style={{ color: 'white', textDecoration: 'none', opacity: 0.5, transition: '0.3s' }} onMouseOver={e => e.target.style.opacity = 1} onMouseOut={e => e.target.style.opacity = 0.5}>TWITTER</a>

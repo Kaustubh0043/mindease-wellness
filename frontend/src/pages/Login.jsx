@@ -66,16 +66,30 @@ const Login = () => {
     }, [location]);
 
     useEffect(() => {
-        if (window.google) {
-            window.google.accounts.id.initialize({
-                client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-                callback: handleGoogleSuccess
-            });
-            window.google.accounts.id.renderButton(
-                document.getElementById("googleSignInButton"),
-                { theme: "filled_blue", size: "large", width: "100%", shape: "pill" }
-            );
-        }
+        const initializeGoogle = () => {
+            if (window.google) {
+                window.google.accounts.id.initialize({
+                    client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+                    callback: handleGoogleSuccess
+                });
+                window.google.accounts.id.renderButton(
+                    document.getElementById("googleSignInButton"),
+                    { theme: "filled_blue", size: "large", width: "100%", shape: "pill" }
+                );
+                return true;
+            }
+            return false;
+        };
+
+        if (initializeGoogle()) return;
+
+        const interval = setInterval(() => {
+            if (initializeGoogle()) {
+                clearInterval(interval);
+            }
+        }, 100);
+
+        return () => clearInterval(interval);
     }, [isRegistering]);
 
     const handleSubmit = async (e) => {
@@ -292,7 +306,7 @@ const Login = () => {
 
             <footer style={{ padding: '15vh 6vw', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
                 <div className="massive-title" style={{ fontSize: 'clamp(3rem, 10vw, 8rem)', opacity: 0.1, color: 'white', marginBottom: '4rem', position: 'relative', zIndex: 0 }}>MINDEASE</div>
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '3rem', marginBottom: '6rem', fontWeight: 800, fontSize: '0.75rem', letterSpacing: '4px', position: 'relative', zIndex: 100 }}>
+                <div className="footer-links-container">
                     <Link to="/docs" style={{ display: 'inline-block', color: 'white', textDecoration: 'none', border: '2px solid #8b5cf6', padding: '0.8rem 2rem', borderRadius: '2rem', background: 'rgba(139, 92, 246, 0.2)' }}>GET SUPPORT</Link>
                     <a href="https://www.instagram.com/kaustubhh.jadhav/" target="_blank" rel="noreferrer" style={{ color: 'white', textDecoration: 'none', opacity: 0.5 }}>INSTAGRAM</a>
                     <a href="https://x.com/Kaustubh__xd" target="_blank" rel="noreferrer" style={{ color: 'white', textDecoration: 'none', opacity: 0.5 }}>TWITTER</a>

@@ -233,3 +233,27 @@ h1, h2, h3, .logo {
   }
 }
 
+/* Responsive Footer Links Container */
+.footer-links-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  margin-bottom: 6rem;
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 4px;
+  position: relative;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .footer-links-container {
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+}
+
+
