@@ -14,34 +14,9 @@ const Register = () => {
         verificationCode: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { register, verifyEmail, loginWithGoogle } = useAuth();
+    const { register, verifyEmail } = useAuth();
     const navigate = useNavigate();
-
-    const handleGoogleSuccess = async (response) => {
-        setIsSubmitting(true);
-        try {
-            const user = await loginWithGoogle(response.credential);
-            navigate(user.role === 'ADMIN' ? '/admin' : '/dashboard');
-        } catch (error) {
-            console.error("Google authentication failed:", error);
-            alert("Google Sign-In failed. Please try again.");
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    useEffect(() => {
-        if (window.google && step === 1) {
-            window.google.accounts.id.initialize({
-                client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-                callback: handleGoogleSuccess
-            });
-            window.google.accounts.id.renderButton(
-                document.getElementById("googleRegisterButton"),
-                { theme: "filled_blue", size: "large", width: "100%", shape: "pill" }
-            );
-        }
-    }, [step]);
+ 
  
     const validateEmail = (email) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -239,13 +214,6 @@ const Register = () => {
                                 </button>
                             </form>
 
-                            <div style={{ display: 'flex', alignItems: 'center', margin: '2rem 0', color: '#475569' }}>
-                                <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.05)' }}></div>
-                                <span style={{ padding: '0 1rem', fontSize: '0.65rem', fontWeight: '800', letterSpacing: '2px' }}>OR</span>
-                                <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.05)' }}></div>
-                            </div>
-
-                            <div id="googleRegisterButton" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}></div>
                         </>
                     ) : (
                         <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={handleSubmit}>
