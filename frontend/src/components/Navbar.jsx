@@ -120,7 +120,7 @@ const Navbar = () => {
                         padding: 2rem 1.5rem; display: flex; flex-direction: column;
                         z-index: 100; border-right: 1px solid rgba(255,255,255,0.03);
                         background: rgba(2, 6, 23, 0.4); backdrop-filter: blur(40px);
-                        overflow-y: auto;
+                        overflow: visible;
                     }
                     .ghost-sidebar::-webkit-scrollbar {
                         width: 4px;
